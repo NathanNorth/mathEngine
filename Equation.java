@@ -21,13 +21,12 @@ public class Equation {
 
    //preconditions: every subtraction is + a negative number
    private String pemdas(String stringIn) {
-      
 
-      String[] addition = stringIn.split("[+]"); //creates array of things to add
+      String[] addition = stringIn.split("\\+"); //creates array of things to add
       
       //sort through addition table and multiply numbers      
       for(int i = 0; i < addition.length; i++) {
-         String[] multiplication = addition[i].split("[*]"); //splits any additives that multiply
+         String[] multiplication = addition[i].split("\\*"); //splits any additives that multiply
          
          
          //the great divide
@@ -41,7 +40,7 @@ public class Equation {
       
       double add = 0; //holds the current running total
       for(int i = 0; i < addition.length; i++) {
-         add += Double.parseDouble(addition[i]); //VALUEOF VS PARSEDOUBLE
+         add += Double.parseDouble(addition[i]);
       }
       return "" + add;
    }
