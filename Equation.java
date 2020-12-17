@@ -37,6 +37,9 @@ public class Equation {
             double div = Double.parseDouble(division[0]); //first item in the division array should be divided
             for(int l = 1; l < division.length; l++) {
                div = div / Double.parseDouble(division[l]);
+
+
+
             }
             multiplication[k] = "" + div;
          }
@@ -53,6 +56,18 @@ public class Equation {
          add += Double.parseDouble(addition[i]);
       }
       return "" + add;
+   }
+   public static int[] parenthesis(String str){
+      int[] arr = new int[2];
+      for(int i=0;i<str.length();i++){
+         if(str.charAt(i) == '(')
+            arr[0] = i;
+      }
+      for(int i=str.length()-1;i>=0;i--){
+         if(str.charAt(i) == ')')
+            arr[1] = i;
+      }
+      return arr;
    }
    
    public String toString() {
