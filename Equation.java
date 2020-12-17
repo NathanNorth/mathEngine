@@ -8,6 +8,9 @@ public class Equation {
    public Equation(String inputEquation) {
       this.inputEquation = inputEquation;
       
+      //testing for pTable
+      //System.out.println(pTable("4(5896*85/5(4-7)) + (3)")[2]);
+      
       evaluatedEquation = pemdas(clean(this.inputEquation));
    }
    
@@ -56,7 +59,34 @@ public class Equation {
       return "" + add;
    }
    
-   public void arrayDebug(String[] arrayIn) {
+   //returns a table with the open and closes parenths
+   private int[] pTable(String str) {
+      int[] array = new int[10];
+      int pos = 0; //number relative to being inside paren
+      int aPos = 0; //next number in the array
+      
+      //loops through string
+      for(int i = 0; i < str.length(); i++) {
+         if(str.charAt(i) == '(') {
+            if(pos == 0) {
+               array[aPos] = i;
+               aPos++; //just increments to know what the next index in our array should be
+            }
+            pos++; //we are in a parenthesis so we increment this one
+         }
+         if(str.charAt(i) == ')') {
+            pos--; //leaving parenthesis
+            if(pos == 0) { //checks to make sure we are leaving the right parenthesis
+               array[aPos] = i;
+               aPos++;
+            }
+         }
+      }
+      return array;
+   }
+   
+   //ONLY HANDLES STRING
+   private void arrayDebug(String[] arrayIn) {
       for(int i = 0; i < arrayIn.length; i++)
          System.out.println(arrayIn[i]);
    }
