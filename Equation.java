@@ -10,8 +10,13 @@ public class Equation {
       evaluatedEquation = pemdas(clean(this.inputEquation));
    }
    
+   //cleans input string to fix formatting requirements for pemdas method
    private String clean(String in) {
-      return in;
+      cleanedEquation = in.replace(" ", ""); //delete all whitespace
+      cleanedEquation = cleanedEquation.replace("--", "+"); //double negative is a positive
+      cleanedEquation = cleanedEquation.replace("-", "+-"); //any subtraction is + a negative number
+      cleanedEquation = cleanedEquation.replace("++", "+"); //previous line of code will created double + for ex (5+-2) becomes (5++-2)
+      return cleanedEquation;
    }
 
    //preconditions: every subtractions is + a negative number
