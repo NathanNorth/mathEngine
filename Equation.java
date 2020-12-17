@@ -19,7 +19,7 @@ public class Equation {
       return cleanedEquation;
    }
 
-   //preconditions: every subtraction is + a negative number
+   //preconditions: every subtraction is + a negative number. Returns a string because we want to implement variables eventually
    private String pemdas(String stringIn) {
 
       String[] addition = stringIn.split("\\+"); //creates array of things to add
