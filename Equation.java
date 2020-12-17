@@ -85,7 +85,7 @@ public class Equation {
       return array;
    }
    
-   //ONLY HANDLES STRING
+   //ONLY HANDLES STRINGS
    private void arrayDebug(String[] arrayIn) {
       for(int i = 0; i < arrayIn.length; i++)
          System.out.println(arrayIn[i]);
