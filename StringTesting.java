@@ -6,6 +6,5 @@ public class StringTesting {
       Scanner in = new Scanner(System.in);
       Equation num1 = new Equation(in.nextLine());
       System.out.println(num1);
-      //trolololol
    }
 }
