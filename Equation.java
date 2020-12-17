@@ -61,7 +61,7 @@ public class Equation {
    
    //returns a table with the open and closes parenths
    private int[] pTable(String str) {
-      int[] array = new int[10];
+      int[] array = new int[str.length()];
       int pos = 0; //number relative to being inside paren
       int aPos = 0; //next number in the array
       
