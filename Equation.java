@@ -3,7 +3,8 @@ public class Equation {
    private final String inputEquation; //always accessible unedited version of the original inputs
    private String cleanedEquation; //prep-ed and adjusted equation used by pemdas system
    private String evaluatedEquation; //results after pemdas
-
+   
+   //construction
    public Equation(String inputEquation) {
       this.inputEquation = inputEquation;
       
@@ -53,6 +54,11 @@ public class Equation {
          add += Double.parseDouble(addition[i]);
       }
       return "" + add;
+   }
+   
+   public void arrayDebug(String[] arrayIn) {
+      for(int i = 0; i < arrayIn.length; i++)
+         System.out.println(arrayIn[i]);
    }
    
    public String toString() {
