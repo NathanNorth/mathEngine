@@ -24,13 +24,23 @@ public class Equation {
 
       String[] addition = stringIn.split("\\+"); //creates array of things to add
       
-      //sort through addition table and multiply numbers      
+      //handle multiplication in the addition array      
       for(int i = 0; i < addition.length; i++) {
          String[] multiplication = addition[i].split("\\*"); //splits any additives that multiply
          
-         
-         //the great divide
-         
+         //handling division in the multiplication array
+         for(int k = 0; k < multiplication.length; k++) {
+            String[] division = multiplication[k].split("\\/");
+            
+            //the great divide
+            
+            double div = Double.parseDouble(division[0]); //first item in the division array should be divided
+            for(int l = 1; l < division.length; l++) {
+               div = div / Double.parseDouble(division[l]);
+            }
+            multiplication[k] = "" + div;
+         }
+            
          double mult = 1; //running total
          for(int j = 0; j < multiplication.length; j++) {
             mult *= Double.parseDouble(multiplication[j]);
@@ -48,5 +58,4 @@ public class Equation {
    public String toString() {
       return evaluatedEquation;
    }
-   
 }
