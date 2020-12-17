@@ -15,11 +15,11 @@ public class Equation {
       cleanedEquation = in.replace(" ", ""); //delete all whitespace
       cleanedEquation = cleanedEquation.replace("--", "+"); //double negative is a positive
       cleanedEquation = cleanedEquation.replace("-", "+-"); //any subtraction is + a negative number
-      cleanedEquation = cleanedEquation.replace("++", "+"); //previous line of code will created double + for ex (5+-2) becomes (5++-2)
+      cleanedEquation = cleanedEquation.replace("++", "+"); //corrects for potential problems with previous line of code (2+-2 becomes 2++-2)
       return cleanedEquation;
    }
 
-   //preconditions: every subtractions is + a negative number
+   //preconditions: every subtraction is + a negative number
    private String pemdas(String stringIn) {
       
 
