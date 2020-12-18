@@ -16,7 +16,7 @@ public class Equation {
       evaluatedEquation = pemdas(clean(this.inputEquation));
    }
    
-   //cleans input string to fix formatting requirements for pemdas method
+   //cleans input string to fix formatting requirements for pemdas method. This is also where program should error in the future for things like forgetting a parenthesis.
    private String clean(String in) {
       cleanedEquation = in.replace(" ", ""); //delete all whitespace
       cleanedEquation = cleanedEquation.replace("--", "+"); //double negative is a positive
@@ -36,8 +36,8 @@ public class Equation {
          String[] beReplaced = new String[aPos]; //aPos *should* be long enough because its based on how many parenthesis per layer there are
          String[] replaceW = new String[aPos];
          
-         //populate arrays of for terms to replace and be replaced by
-         for(int o = 0; o < aPos; o += 2) { //loops for the practical length of pIndex
+         //populate arrays of terms to replace and be replaced by
+         for(int o = 0; o < aPos; o += 2) { //loops for the *effective* length of pIndex (pIndex is actually initilized too long as currently written)
          
             //records the area that needs to be replaces according to pIndex
             beReplaced[o] = stringIn.substring(pIndex[o], pIndex[o + 1] + 1);
