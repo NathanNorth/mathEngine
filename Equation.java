@@ -4,6 +4,7 @@ public class Equation {
    private String cleanedEquation; //prep-ed and adjusted equation used by pemdas system
    private String evaluatedEquation; //results after pemdas
    
+   //should eventually avoid using this, instead using array legth once arrays aren't overlengthened
    private int aPos = 0; //number of parenthesis to worry about
    
    //construction
@@ -45,13 +46,15 @@ public class Equation {
             //finds what to replace it by reccuring pemdas until we have no parenth left
             replaceW[o] = pemdas(stringIn.substring((pIndex[o] + 1), pIndex[o + 1]));
             
+            //debug printing
             System.out.println("String in: " + stringIn);
             System.out.println("To replace: " + beReplaced[o] + " Replace with: " + replaceW[o]);
+            System.out.println("Result: " + stringIn.replace(beReplaced[o], replaceW[o]));
          }
          
          //use arrays to replace calculated terms. Increment by two because I'm too lazy to implement proper array creation (YET)
          for(int y = 0; y < aPos; y += 2) {
-            stringIn = stringIn.replace(beReplaced[y], replaceW[y]);
+            stringIn = stringIn.replace(beReplaced[y], replaceW[y]); //scuffed lol
          }
       }
 
