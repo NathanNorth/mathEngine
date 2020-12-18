@@ -4,6 +4,8 @@ public class Equation {
    private String cleanedEquation; //prep-ed and adjusted equation used by pemdas system
    private String evaluatedEquation; //results after pemdas
    
+   private int aPos = 0; //number of parenthesis to worry about
+   
    //construction
    public Equation(String inputEquation) {
       this.inputEquation = inputEquation;
@@ -25,6 +27,33 @@ public class Equation {
 
    //preconditions: every subtraction is + a negative number. Returns a string because we want to implement variables eventually
    private String pemdas(String stringIn) {
+      
+      //PARENTHESIS AND RECCURSION
+      if(stringIn.contains("(")) {
+         int[] pIndex = pTable(stringIn); //array with all the parenthesis we are looking at
+         
+         //arrays represent the list of values that need to be replaced, and correspondingly what to replace them with
+         String[] beReplaced = new String[aPos]; //aPos *should* be long enough because its based on how many parenthesis per layer there are
+         String[] replaceW = new String[aPos];
+         
+         //populate arrays of for terms to replace and be replaced by
+         for(int o = 0; o < aPos; o += 2) { //loops for the practical length of pIndex
+         
+            //records the area that needs to be replaces according to pIndex
+            beReplaced[o] = stringIn.substring(pIndex[o], pIndex[o + 1] + 1);
+            
+            //finds what to replace it by reccuring pemdas until we have no parenth left
+            replaceW[o] = pemdas(stringIn.substring((pIndex[o] + 1), pIndex[o + 1]));
+            
+            System.out.println("String in: " + stringIn);
+            System.out.println("To replace: " + beReplaced[o] + " Replace with: " + replaceW[o]);
+         }
+         
+         //use arrays to replace calculated terms. Increment by two because I'm too lazy to implement proper array creation (YET)
+         for(int y = 0; y < aPos; y += 2) {
+            stringIn = stringIn.replace(beReplaced[y], replaceW[y]);
+         }
+      }
 
       String[] addition = stringIn.split("\\+"); //creates array of things to add
       
@@ -63,7 +92,7 @@ public class Equation {
    private int[] pTable(String str) {
       int[] array = new int[str.length()];
       int pos = 0; //number relative to being inside paren
-      int aPos = 0; //next number in the array
+      aPos = 0; //THIS MUST BE RESET HERE so recursion works properly
       
       //loops through string
       for(int i = 0; i < str.length(); i++) {
