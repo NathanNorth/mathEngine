@@ -19,7 +19,22 @@ public class Equation {
    
    //cleans input string to fix formatting requirements for pemdas method. This is also where program should error in the future for things like forgetting a parenthesis.
    private String clean(String in) {
-      cleanedEquation = in.replace(" ", ""); //delete all whitespace
+      String cleaned = in;
+      String special = "+-*/";
+      for(int i = 1; i < cleaned.length()-1; i++){
+         if(cleaned.charAt(i) == '('){
+            if(Character.isDigit(cleaned.charAt(i-1)) && Character.isDigit(cleaned.charAt(i+1))){
+               cleaned = cleaned.substring(0, i) + "*" + cleaned.substring(i);
+            }
+         }
+         else if(cleaned.charAt(i) == ')'){
+            if(Character.isDigit(cleaned.charAt(i-1)) && Character.isDigit(cleaned.charAt(i+1))){
+               cleaned = cleaned.substring(0, i) + "*" + cleaned.substring(i);
+            }
+         }
+      }
+      cleanedEquation = cleaned;
+      cleanedEquation = cleanedEquation.replace(" ", ""); //delete all whitespace
       cleanedEquation = cleanedEquation.replace("--", "+"); //double negative is a positive
       cleanedEquation = cleanedEquation.replace("-", "+-"); //any subtraction is + a negative number
       cleanedEquation = cleanedEquation.replace("++", "+"); //corrects for potential problems with previous line of code (2+-2 becomes 2++-2)
