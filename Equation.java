@@ -13,13 +13,25 @@ public class Equation {
       
       //testing for pTable
       //System.out.println(pTable("4(5896*85/5(4-7)) + (3)")[2]);
-      
       evaluatedEquation = pemdas(clean(this.inputEquation));
    }
    
    //cleans input string to fix formatting requirements for pemdas method. This is also where program should error in the future for things like forgetting a parenthesis.
    private String clean(String in) {
-      cleanedEquation = in.replace(" ", ""); //delete all whitespace
+      String cleanedEquation = in; //working string
+      
+      //works way through string finding instances of numbers outside of parenthesis (eg 2(2))
+      for(int i = 0; i < cleanedEquation.length(); i++) {
+         if(i != 0 && cleanedEquation.charAt(i) == '(' && Character.isDigit(cleanedEquation.charAt(i - 1))) { //the i checks exist to avoid string OOB problems
+            cleanedEquation = cleanedEquation.substring(0, i) + "*" + cleanedEquation.substring(i);
+         }
+         else if(i + 1 != cleanedEquation.length() && cleanedEquation.charAt(i) == ')' && Character.isDigit(cleanedEquation.charAt(i + 1))) {
+            cleanedEquation = cleanedEquation.substring(0, i + 1) + "*" + cleanedEquation.substring(i + 1); //this is i+1 because the * comes after the closed parenthesis
+         }
+      }
+
+      //addition and subtraction cleaning
+      cleanedEquation = cleanedEquation.replace(" ", ""); //delete all whitespace
       cleanedEquation = cleanedEquation.replace("--", "+"); //double negative is a positive
       cleanedEquation = cleanedEquation.replace("-", "+-"); //any subtraction is + a negative number
       cleanedEquation = cleanedEquation.replace("++", "+"); //corrects for potential problems with previous line of code (2+-2 becomes 2++-2)
