@@ -21,13 +21,11 @@ public class Equation {
       String cleanedEquation = in; //working string
       
       //works way through string finding instances of numbers outside of parenthesis (eg 2(2))
-      for(int i = 0; i < cleanedEquation.length(); i++) {
-         if(i != 0 && cleanedEquation.charAt(i) == '(' && Character.isDigit(cleanedEquation.charAt(i - 1))) { //the i checks exist to avoid string OOB problems
+      for(int i = 1; i < cleanedEquation.length() - 1; i++) { //deliberately ignores last and first character to avoid string index OOB problems
+         if(cleanedEquation.charAt(i) == '(' && Character.isDigit(cleanedEquation.charAt(i - 1)))
             cleanedEquation = cleanedEquation.substring(0, i) + "*" + cleanedEquation.substring(i);
-         }
-         else if(i + 1 != cleanedEquation.length() && cleanedEquation.charAt(i) == ')' && Character.isDigit(cleanedEquation.charAt(i + 1))) {
+         else if(cleanedEquation.charAt(i) == ')' && Character.isDigit(cleanedEquation.charAt(i + 1)))
             cleanedEquation = cleanedEquation.substring(0, i + 1) + "*" + cleanedEquation.substring(i + 1); //this is i+1 because the * comes after the closed parenthesis
-         }
       }
 
       //addition and subtraction cleaning
