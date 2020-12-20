@@ -13,7 +13,7 @@ public class Equation {
       
       //testing for pTable
       //System.out.println(pTable("4(5896*85/5(4-7)) + (3)")[2]);
-      
+      //gaonaeiiiii
       evaluatedEquation = pemdas(clean(this.inputEquation));
    }
    
