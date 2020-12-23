@@ -12,7 +12,8 @@ public class Equation {
       this.inputEquation = inputEquation;
       
       //testing for pTable
-      //System.out.println(pTable("4(5896*85/5(4-7)) + (3)")[2]);
+      //System.out.println(pTable("4(5896*85/5(4-7)) + (3)")[2])git;
+      
       evaluatedEquation = pemdas(clean(this.inputEquation));
    }
    
