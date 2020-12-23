@@ -75,9 +75,22 @@ public class Equation {
          //handling division in the multiplication array
          for(int k = 0; k < multiplication.length; k++) {
             String[] division = multiplication[k].split("\\/");
+               
+               //deal with exponents that are in the division array
+               for(int z = 0; z < division.length; z++) {
+                  String[] exponents = division[z].split("\\^");
+                  
+                                    
+                  //the great divide
             
-            //the great divide
-            
+                  
+                  double exp = Double.parseDouble(exponents[0]);
+                  for(int q = 1; q < exponents.length; q++) {
+                     exp = Math.pow(exp, Double.parseDouble(exponents[q]));
+                  }
+                  division[z] = "" + exp;
+               }
+
             double div = Double.parseDouble(division[0]); //first item in the division array should be divided
             for(int l = 1; l < division.length; l++) {
                div = div / Double.parseDouble(division[l]);
