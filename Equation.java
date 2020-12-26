@@ -29,13 +29,16 @@ public class Equation {
       if(index == -1) index = equationIn.indexOf('~');
       if(index == -1) index = equationIn.indexOf('`');
       
+      //brakes up equation into arrays
       brokenEq[0] = equationIn.substring(0, index);
       brokenEq[1] = equationIn.substring(index, index + 1);
       brokenEq[2] = equationIn.substring(index + 1, equationIn.length());
       
+      //creates expression objects
       Expression leftEq = new Expression(brokenEq[0]);
       Expression rightEq = new Expression(brokenEq[2]);
       
+      //evaluates for a boolean
       switch(brokenEq[1]) {
          case "=":
          return leftEq.toDouble() == rightEq.toDouble();
