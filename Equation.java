@@ -15,8 +15,7 @@ public class Equation {
       equationIn = equationInput;
       
       //deals with less than and greater than by replacing them with placeholder characters so that its easier to create brokenEq THIS SHOULD BE IN CLEANER CLASS
-      equationIn = equationIn.replace(">=", "~");
-      equationIn = equationIn.replace("<=", "`");
+
       
       result = solve(this.equationIn);
    }
