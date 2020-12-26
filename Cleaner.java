@@ -6,6 +6,8 @@ public class Cleaner {
       in = in.replace("<=", "`");
       
       if(Processor.indexOfOperator(in) == -1) {
+         //eric code zone
+         
          return "noSign";
       }
       return in;
