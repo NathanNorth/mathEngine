@@ -1,11 +1,11 @@
-public class Equation {
+public class Expression {
 
    private final String inputEquation; //always accessible unedited version of the original inputs
    private String cleanedEquation; //prep-ed and adjusted equation used by pemdas system
    private String evaluatedEquation; //results after pemdas
  
    //construction
-   public Equation(String inputEquation) {
+   public Expression(String inputEquation) {
       this.inputEquation = inputEquation;
       
       //testing for pTable
@@ -148,6 +148,10 @@ public class Equation {
    private void arrayDebug(String[] arrayIn) {
       for(int i = 0; i < arrayIn.length; i++)
          System.out.println(arrayIn[i]);
+   }
+   
+   public String getEval() {
+      return evaluatedEquation;
    }
    
    public String toString() {
