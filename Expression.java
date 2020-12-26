@@ -154,6 +154,10 @@ public class Expression {
       return evaluatedEquation;
    }
    
+   public double toDouble() {
+      return Double.parseDouble(evaluatedEquation);
+   }
+      
    public String toString() {
       return evaluatedEquation;
    }
