@@ -5,8 +5,9 @@ public class Processor {
       
       int index = indexOfOperator(in);
       
+      //GUESS AND CHECK ALGORYTHM
       if(in.contains("x") && index != 0 && index != in.length() - 1) {
-         for(int i = 0; i < Double.MAX_VALUE; i++) {
+         for(double i = 0; i < Double.MAX_VALUE; i++) {
             String guess = in.replace("x", "(" + i + ")");
             Equation eq1 = new Equation(guess);
             if(eq1.result) {
