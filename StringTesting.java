@@ -7,5 +7,7 @@ public class StringTesting {
       Scanner in = new Scanner(System.in);
       String num1 = Processor.process(Cleaner.highLevelClean(in.nextLine()));
       System.out.println("Final result: " + num1);
+      
+      main(args);
    }
 }

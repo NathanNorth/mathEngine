@@ -27,7 +27,7 @@ public class Expression {
       }
       
       //fixes crashes for starting with + or -
-      cleanedEquation = "0" + cleanedEquation;
+      if(cleanedEquation.charAt(0) == '-' || cleanedEquation.charAt(0) == '+') cleanedEquation = "0" + cleanedEquation;
       
       //addition and subtraction cleaning
       cleanedEquation = cleanedEquation.replace(" ", ""); //delete all whitespace
