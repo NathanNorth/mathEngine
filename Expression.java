@@ -3,15 +3,26 @@ public class Expression {
    private final String inputEquation; //always accessible unedited version of the original inputs
    private String cleanedEquation; //prep-ed and adjusted equation used by pemdas system
    private String evaluatedEquation; //results after pemdas
- 
-   //construction
+   private boolean verbose;
+   
+   public static int numInit; //number of expressions created total, just for debuging
+
+   //construction without specified verbose
    public Expression(String inputEquation) {
       this.inputEquation = inputEquation;
-      
-      //testing for pTable
-      //System.out.println(pTable("4(5896*85/5(4-7)) + (3)")[2])git;
-      
+      verbose = false;
+ 
       evaluatedEquation = pemdas(clean(this.inputEquation));
+      numInit++;
+   }
+   
+   //construction
+   public Expression(String inputEquation, boolean verbose) {
+      this.inputEquation = inputEquation;
+      this.verbose = verbose;
+    
+      evaluatedEquation = pemdas(clean(this.inputEquation));
+      numInit++;
    }
    
    //cleans input string to fix formatting requirements for pemdas method. This is also where program should error in the future for things like forgetting a parenthesis.
@@ -25,6 +36,7 @@ public class Expression {
          else if(cleanedEquation.charAt(i) == ')' && Character.isDigit(cleanedEquation.charAt(i + 1)))
             cleanedEquation = cleanedEquation.substring(0, i + 1) + "*" + cleanedEquation.substring(i + 1); //this is i+1 because the * comes after the closed parenthesis
       }
+      cleanedEquation = cleanedEquation.replace(")(", ")*("); //self explanatory
       
       //fixes crashes for starting with + or -
       if(cleanedEquation.charAt(0) == '-' || cleanedEquation.charAt(0) == '+') cleanedEquation = "0" + cleanedEquation;
@@ -57,10 +69,13 @@ public class Expression {
             //finds what to replace it by reccuring pemdas until we have no parenth left
             replaceW[o] = pemdas(clean(stringIn.substring((pIndex[o] + 1), pIndex[o + 1]))); //we clean here incase our parenthesis starts with a + or -. kinda scuffed
             
-            //debug printing
-            System.out.println("String in: " + stringIn);
-            System.out.println("To replace: " + beReplaced[o] + " Replace with: " + replaceW[o]);
-            System.out.println("Result: " + stringIn.replace(beReplaced[o], replaceW[o]));
+            if(verbose) {
+               //debug printing
+               System.out.println("String in: " + stringIn);
+               System.out.println("To replace: " + beReplaced[o] + " Replace with: " + replaceW[o]);
+               System.out.println("Result: " + stringIn.replace(beReplaced[o], replaceW[o]));            
+            }
+            
          }
          
          //use arrays to replace calculated terms. Increment by two because I'm too lazy to implement proper array creation (YET)

@@ -1,3 +1,5 @@
+import java.text.DecimalFormat; //we need this to avoid passing in garbage in scientific format
+
 public class Processor {
 
    public static String process(String in) {
@@ -7,7 +9,7 @@ public class Processor {
       
       //GUESS AND CHECK ALGORYTHM
       if(in.contains("x") && index != 0 && index != in.length() - 1) {
-         return "" + solveFor("x", in, 1000, 0);
+         return "" + solveFor("x", in, -Double.MAX_VALUE / 2, Double.MAX_VALUE / 2, 10, 0);
       }
       
       if(in.contains("x")) { //this only runs if there is an x and a unfinished expression
@@ -29,51 +31,55 @@ public class Processor {
       }
    }
    
-   //REWRITE TO HAVE START RANGE END RANGE YAAAAS
-   private static double solveFor(String letter, String in, double times, double start) {
-      Double[] guesses = new Double[20];
-      int pos = 0;
-      
-      //currently checks positives and negatives because im dumb and hate my life
-      for(double i = 0; i < 10; i ++) {
-         double plug = (i + start) * times / 10; //this is cringe and hard to trage
+   //preconditions: read the variable names
+   //postconditions a double representing a x value, don't input equations with multiple x vals
+   private static double solveFor(String letter, String in, double min, double max, int cuts, double error) { //cuts represent the number of different tests that will be run before comparing for closest answer
+      Double[] guessInput = new Double[cuts]; //array of all inputs to test for
+      Double[] guessOutput = new Double[cuts]; //array of all outputs based on input
+      double range = max - min;
+      double mult = range / cuts; //mult represents the size between each different guessInput
          
-         String guess = in.replace(letter, "(" + plug + ")");
-         Equation eq1 = new Equation(guess);
-         guesses[pos] = eq1.difference;
-         pos++;
-            
-         String guessNegative = in.replace(letter, "(" + -plug + ")");
-         Equation eq2 = new Equation(guessNegative); 
-         guesses[pos] = eq2.difference;
-         pos++;
-      } //NOTE LAST ITEM OF ARRAY MIGHT BE SCUFFED
+      DecimalFormat df = new DecimalFormat("0");
+      df.setMaximumFractionDigits(340); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
       
-      double bestGuess = times;
-      int bestAPos = -1;
-      for(int i = 0; i < guesses.length; i++) {
-         if(Math.abs(guesses[i]) < bestGuess) {
-            bestGuess = Math.abs(guesses[i]);
-            bestAPos = i;
+      //populate guessInput
+      for(int i = 0; i < cuts; i++) {
+         guessInput[i] = i * mult + min;
+      }
+      
+      //populate guessOutput
+      for(int i = 0; i < cuts; i ++) {
+         
+         String guess = in.replace(letter, "(" + df.format(guessInput[i]) + ")");
+         Equation eq1 = new Equation(guess);
+         guessOutput[i] = eq1.difference;
+         
+      }
+      
+      //find the smallest guessOuput and records the associated guessinput
+      double bestGuess = range;
+      double bestInput = 0; //SCUFFED SHOULD NOT RETURN 0 IN CASE OF OOB INPUTS
+      for(int i = 0; i < cuts; i++) {
+         if(Math.abs(guessOutput[i]) < bestGuess) {
+            bestGuess = Math.abs(guessOutput[i]);
+            bestInput = guessInput[i];
          }
       }
       
-      //attrocious demon code from hell becuse my array is needlessly complicated
-      double realI = 0;
-      if(bestAPos % 2 == 1) {
-         realI =  -(bestAPos - 1) / 2;
+      //if our current best guess is within our margin of error then return the input that made it
+      if(bestGuess <= error) {
+         return round(bestInput, error);
       }
-      else {
-         realI = bestAPos / 2;
+      else { //else we run ourselves again but with more focused guess range
+         return solveFor("x", in, bestInput - mult * 2, bestInput + mult * 2, cuts, error);
       }
-      
-      realI = (realI + start) * times / 10;  //recreates the plug value which is the actual x val we care about
-      if(bestGuess == 0) {
-         return realI;
-      }
-      else {
-         return solveFor("x", in, times / 10, realI);
-      }
+   }
+   
+   private static double round(double in, double places) {
+      if(places != 0) //checking if no margin of error was passed in
+         return Math.round(in / places) * places;
+      else
+         return in;
    }
    
    //returns the location of operators
