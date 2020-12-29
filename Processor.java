@@ -1,4 +1,5 @@
 import java.text.DecimalFormat; //we need this to avoid passing in garbage in scientific format
+import java.math.BigDecimal; //for things that just round themselves because built different
 
 public class Processor {
 
@@ -9,7 +10,7 @@ public class Processor {
       
       //GUESS AND CHECK ALGORYTHM
       if(in.contains("x") && index != 0 && index != in.length() - 1) {
-         return "" + solveFor("x", in, -1000, 1000, 10, 0);
+         return "" + solveFor("x", in, -Double.MAX_VALUE / 2, Double.MAX_VALUE / 2, 10, 0.0000000001); //this margin of error is cringe and doesnt work for all values
       }
       
       if(in.contains("x")) { //this only runs if there is an x and a unfinished expression
@@ -71,7 +72,11 @@ public class Processor {
          return round(bestInput, error);
       }
       else { //else we run ourselves again but with more focused guess range
-         return solveFor("x", in, bestInput - mult, bestInput + mult, cuts, error);
+      
+         
+         System.out.println("Best Guess: " + bestGuess + "\nMult: " + mult + "\nRange: " + range);
+         
+         return solveFor("x", in, bestInput - mult, bestInput + mult, cuts, error); //maybe mult / 2
       }
    }
    
