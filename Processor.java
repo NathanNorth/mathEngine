@@ -9,7 +9,7 @@ public class Processor {
       
       //GUESS AND CHECK ALGORYTHM
       if(in.contains("x") && index != 0 && index != in.length() - 1) {
-         return "" + solveFor("x", in, -Double.MAX_VALUE / 2, Double.MAX_VALUE / 2, 10, 0);
+         return "" + solveFor("x", in, -1000, 1000, 10, 0);
       }
       
       if(in.contains("x")) { //this only runs if there is an x and a unfinished expression
@@ -57,7 +57,7 @@ public class Processor {
       }
       
       //find the smallest guessOuput and records the associated guessinput
-      double bestGuess = range;
+      double bestGuess = Double.MAX_VALUE;
       double bestInput = 0; //SCUFFED SHOULD NOT RETURN 0 IN CASE OF OOB INPUTS
       for(int i = 0; i < cuts; i++) {
          if(Math.abs(guessOutput[i]) < bestGuess) {
