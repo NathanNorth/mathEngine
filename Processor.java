@@ -71,7 +71,7 @@ public class Processor {
          return round(bestInput, error);
       }
       else { //else we run ourselves again but with more focused guess range
-         return solveFor("x", in, bestInput - mult * 2, bestInput + mult * 2, cuts, error);
+         return solveFor("x", in, bestInput - mult, bestInput + mult, cuts, error);
       }
    }
    
