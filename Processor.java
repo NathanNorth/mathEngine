@@ -10,7 +10,11 @@ public class Processor {
       
       //GUESS AND CHECK ALGORYTHM
       if(in.contains("x") && index != 0 && index != in.length() - 1) {
-         return "" + solveFor("x", in, -Double.MAX_VALUE / 2, Double.MAX_VALUE / 2, 10, 0.0000000001); //this margin of error is cringe and doesnt work for all values
+         //weird out of 10 algorythm 
+         return "" + solveFor("x", in, -Double.MAX_VALUE / 2, Double.MAX_VALUE / 2, 10, 0); //this margin of error is cringe and doesnt work for all values
+         
+         //binary algorythm
+         //return "" + solveFor2("x", in, -Double.MAX_VALUE / 2, Double.MAX_VALUE / 2, 0);
       }
       
       if(in.contains("x")) { //this only runs if there is an x and a unfinished expression
@@ -31,6 +35,25 @@ public class Processor {
          return "" + eq1.result;
       }
    }
+   
+   private static double solveFor2(String letter, String in, double min, double max, double error) { //cuts represent the number of different tests that will be run before comparing for closest answer
+           
+      DecimalFormat df = new DecimalFormat("0");
+      df.setMaximumFractionDigits(340); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
+      
+      double guessInput = random(min, max); //array of all inputs to test for
+      
+      String guess = in.replace(letter, "(" + df.format(guessInput) + ")");
+      Equation eq1 = new Equation(guess);
+      double guessOutput = eq1.difference;
+      
+      if(guessOutput == 0) return guessInput;
+      if(guessOutput < 0) return solveFor2(letter, in, guessInput, max, error);
+      if(guessOutput > 0) return solveFor2(letter, in, min, guessInput, error);
+      
+      return 0; //this should never run
+   }
+
    
    //preconditions: read the variable names
    //postconditions a double representing a x value, don't input equations with multiple x vals
@@ -68,7 +91,7 @@ public class Processor {
       }
       
       //if our current best guess is within our margin of error then return the input that made it
-      if(bestGuess <= error) {
+      if(bestGuess <= error || mult == 0) { //if our mult is 0 the program is looping might as well return a probably accurate number NEEDS MORE TESTING
          return round(bestInput, error);
       }
       else { //else we run ourselves again but with more focused guess range
@@ -76,7 +99,7 @@ public class Processor {
          
          System.out.println("Best Guess: " + bestGuess + "\nMult: " + mult + "\nRange: " + range);
          
-         return solveFor("x", in, bestInput - mult, bestInput + mult, cuts, error); //maybe mult / 2
+         return solveFor("x", in, bestInput - mult, bestInput + mult, cuts, error); //maybe mult / 2 ARGUE WITH ERIC
       }
    }
    
@@ -97,4 +120,10 @@ public class Processor {
       
       return index;
    }
+   
+   
+   private static double random(double min, double max) {
+      return (Math.random() * (max - min) + min);
+   }
+   
 }
