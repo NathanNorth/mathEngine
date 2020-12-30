@@ -13,6 +13,9 @@ public class Processor {
          //weird out of 10 algorythm 
          return "" + solveFor("x", in, -Double.MAX_VALUE / 2, Double.MAX_VALUE / 2, 10, 0); //this margin of error is cringe and doesnt work for all values
          
+         //debug only
+         //return "" + solveFor("x", in, 0, 100, 10, 0);
+         
          //binary algorythm
          //return "" + solveFor2("x", in, -Double.MAX_VALUE / 2, Double.MAX_VALUE / 2, 0);
       }
