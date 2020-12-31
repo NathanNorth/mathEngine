@@ -8,24 +8,65 @@ public class Cleaner {
       // input has no = < > <= >=
 
       if (Processor.indexOfOperator(in) == -1) {
-         // Ends with operators, operator gets chopped
-         if (in.endsWith("+") || in.endsWith("-") || in.endsWith("*") || in.endsWith("/") || in.endsWith("^")) {
-            in = in.substring(0, in.length() - 1);
-         }
-
-         // Consecutive operators return nosign
-         if (in.contains("++") || in.contains("**") || in.contains("//") || in.contains("^^") || in.substring(0, 2).equals("--")) {
+         
+         // Negative combined with certain operators in certain ways return nosign
+         if (in.contains("-*") || in.contains("-^") || in.contains("-/")) {
             return "noSign";
          }
 
-         // Make Parenthesis Method, looking at pTable (but not using it) for info
-            // Start parenthesis but no end fills in end and returns in
-            // End parenthesis but no start returns nosign
-
          // * or / or ^ at start returns nosign
+         if (in.startsWith("*") || in.startsWith("/") || in.startsWith("^")) {
+            return "noSign";
+         }
 
+         // Checks if one operation is followed by any other
+         for (int i = 1; i < in.length(); i++) {
+            if (isNonNegOperator(in.charAt(i)) && isNonNegOperator(in.charAt(i-1))) {
+               return "noSign";
+            }
+         }
+
+         // Ends with operators, operator gets chopped
+         if (isOperator(in.charAt(in.length() - 1))) {
+            in = in.substring(0, in.length() - 1);
+         }
+
+         // If there are 2+ extra start parenthesis or extra end parenthesis, return nosign
+         if (parenthesisCount(in) < 0 || parenthesisCount(in) > 1) {
+            return "noSign";
+         }
+         
+         // If there is 1 end parenthesis missing, add the end parenthesis
+         if (parenthesisCount(in) == 1) {
+            in = in + ")";
+         }
       }   
-      return in;
+      return in + "=";
+   }
+
+   private static int parenthesisCount (String in) {
+      int count = 0;
+      for (int i = 0; i < in.length(); i++) {
+         if (in.charAt(i) == '(') {
+            count++;
+         }
+         if (in.charAt(i) == ')') {
+            count--;
+         }
+      }
+      return count;
+   }
+
+   private static boolean isOperator (char c) {
+      if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+         return true;
+      } else return false;
+   }
+
+   private static boolean isNonNegOperator (char c) {
+      if (c == '+' || c == '*' || c == '/' || c == '^') {
+         return true;
+      } else return false;
    }
 
 }
