@@ -1,5 +1,4 @@
 import java.text.DecimalFormat; //we need this to avoid passing in garbage in scientific format
-import java.math.BigDecimal; //for things that just round themselves because built different
 
 public class Processor {
 
