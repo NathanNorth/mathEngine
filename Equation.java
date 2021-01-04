@@ -3,6 +3,7 @@ public class Equation {
    private String equationIn;
    private String[] brokenEq = new String[3]; //this array is the left right and operator of our equation
    public final boolean result;
+   public double difference;
    
    //just for testing
    public static void main(String[] args) {
@@ -33,6 +34,7 @@ public class Equation {
       //evaluates for a boolean
       switch(brokenEq[1]) {
          case "=":
+         difference = leftEq.toDouble() - rightEq.toDouble();
          return leftEq.toDouble() == rightEq.toDouble();
       
          case "<":
