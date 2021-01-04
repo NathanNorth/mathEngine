@@ -40,8 +40,9 @@ public class Cleaner {
          if (parenthesisCount(in) == 1) {
             in = in + ")";
          }
+         return in + "=";
       }   
-      return in + "=";
+      return in;
    }
 
    // Checks the number of parentheses in the input
