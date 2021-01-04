@@ -44,9 +44,11 @@ public class Cleaner {
       return in + "=";
    }
 
+   // Checks the number of parentheses in the input
    private static int parenthesisCount (String in) {
       int count = 0;
       for (int i = 0; i < in.length(); i++) {
+         // Open parenthesis bring count up 1, closed parenthesis bring count down 1
          if (in.charAt(i) == '(') {
             count++;
          }
@@ -57,12 +59,14 @@ public class Cleaner {
       return count;
    }
 
+   // Checks if a character is an operator
    private static boolean isOperator (char c) {
       if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
          return true;
       } else return false;
    }
 
+   // Checks if a character is an operator that isn't negative
    private static boolean isNonNegOperator (char c) {
       if (c == '+' || c == '*' || c == '/' || c == '^') {
          return true;
