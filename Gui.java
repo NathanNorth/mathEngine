@@ -10,7 +10,7 @@ public class Gui extends JPanel{
     public Gui(){
         setLayout(new FlowLayout());
 
-        field = new JTextField(37);
+        field = new JTextField(25);
         field.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -30,11 +30,12 @@ public class Gui extends JPanel{
         field.addActionListener(new Listener1());
         add(field);
 
-        button = new JButton("exit");
-        button.addActionListener(new Listener());
-        add(button);
+        //button = new JButton("exit");
+        //button.addActionListener(new Listener());
+        //add(button);
 
-        label = new JLabel("LOL!");
+        label = new JLabel("0.0");
+        label.setFont(new Font("Serif", Font.BOLD, 30));
         add(label);
     }
 private class Listener implements ActionListener{
