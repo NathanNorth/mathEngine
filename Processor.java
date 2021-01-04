@@ -38,6 +38,7 @@ public class Processor {
       }
    }
    
+   //LITERALLY DOESNT WORK BTW
    private static double solveFor2(String letter, String in, double min, double max, double error) { //cuts represent the number of different tests that will be run before comparing for closest answer
            
       DecimalFormat df = new DecimalFormat("0");
@@ -105,6 +106,7 @@ public class Processor {
       }
    }
    
+   //pass in places as a decimal (eg 0.0001)
    private static double round(double in, double places) {
       if(places != 0) //checking if no margin of error was passed in
          return Math.round(in / places) * places;
