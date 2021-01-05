@@ -5,11 +5,11 @@ import java.awt.*;
 import java.awt.event.*;
 public class Gui extends JPanel{
     JTextField field;
-    JButton button;
     JLabel label;
     public Gui(){
-        setLayout(new FlowLayout());
-
+        setLayout(new BorderLayout());
+         
+        /*
         field = new JTextField(25);
         field.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -27,26 +27,13 @@ public class Gui extends JPanel{
                 label.setText(Processor.process(Cleaner.highLevelClean(field.getText())));
             }
         });
-        field.addActionListener(new Listener1());
         add(field);
-
-        //button = new JButton("exit");
-        //button.addActionListener(new Listener());
-        //add(button);
-
+         */
+        JPanel box = new InputBox();
+        add(box, BorderLayout.NORTH);
+         
         label = new JLabel("0.0");
         label.setFont(new Font("Serif", Font.BOLD, 30));
-        add(label);
+        add(label, BorderLayout.SOUTH);
     }
-private class Listener implements ActionListener{
-    public void actionPerformed(ActionEvent e){
-        System.exit(0);
-    }
-}
-private class Listener1 implements ActionListener{
-        public void actionPerformed(ActionEvent e){
-            label.setText(Processor.process(Cleaner.highLevelClean(field.getText())));
-        }
-    }
-
 }

@@ -5,8 +5,10 @@ public class Cleaner {
       in = in.replace(">=", "~");
       in = in.replace("<=", "`");
       
-      // input has no = < > <= >=
-
+      //prevents string OOB
+      if(in.equals("")) return "noSign";
+      
+      // input has no = < > <= >=      
       if (Processor.indexOfOperator(in) == -1) {
          
          // Negative combined with certain operators in certain ways return nosign
