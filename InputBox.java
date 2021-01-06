@@ -19,36 +19,40 @@ public class InputBox extends JPanel {
       field.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-               number = field.getText(); //updates our number
-               
-               if(number.contains("/")) {
-                  String[] split = number.split("/");
-                  if (split.length == 2) addDivBox(split[0], split[1]);
-                  if (split.length == 1 && number.charAt(0) != '/') addDivBox(split[0], "1"); //SCUFFED DOESNT WORK FOR MID LINE INSERTION
-                  if (split.length == 1 && number.charAt(0) == '/') addDivBox("0", split[0]);
-               }
-               else GuiDriver.guiObj.update(); //calls our guidriver object and tells it to start updating. probably bad bug solving w/ if statement
-
-               //for debug
-               System.out.println(field.getText());
-
+               onListen();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-               number = field.getText();
-               GuiDriver.guiObj.update();
+               onListen();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-               number = field.getText();
-               GuiDriver.guiObj.update();
+               onListen();;
             }
       });
       field.setText(start);
       add(field);
 
+   }
+   
+   //this runs everytime the text box gets updated, calls a normal update if there is no slash, helps create the division object if there is a /
+   private void onListen() {
+      this.number = this.field.getText();
+      
+      //when we have a slash, depending on where its located we create our division panel with different starting values
+      if(number.contains("/")) {
+         String[] split = number.split("/");
+         if (split.length == 2 && number.charAt(0) == '/') addDivBox("0", split[1]); //check if user enters in smth like /123 and make it 0/123
+         else if (split.length == 2) addDivBox(split[0], split[1]);
+         else if (split.length == 1 && number.charAt(0) != '/') addDivBox(split[0], "1");
+         }
+      else GuiDriver.guiObj.update(); //calls our guidriver object and tells it to start updating.
+
+      //for debug
+      System.out.println(field.getText());
+      
    }
    
    //method to remove existing box and insert a divbox
@@ -61,7 +65,7 @@ public class InputBox extends JPanel {
       //add new crap
       dividePanel = new DivBox(topStart, bottomStart);
       add(dividePanel);
-      revalidate(); //may not be nessesary NEEDS TESTING
+      revalidate(); //may or may not be nessesary NEEDS TESTING
    }
    
    public String getNum() {
