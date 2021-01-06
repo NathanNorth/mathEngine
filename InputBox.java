@@ -23,7 +23,9 @@ public class InputBox extends JPanel {
                
                if(number.contains("/")) {
                   String[] split = number.split("/");
-                  addDivBox(split[0], "1"); //SCUFFED DOESNT WORK FOR MID LINE INSERTION
+                  if (split.length == 2) addDivBox(split[0], split[1]);
+                  if (split.length == 1 && number.charAt(0) != '/') addDivBox(split[0], "1"); //SCUFFED DOESNT WORK FOR MID LINE INSERTION
+                  if (split.length == 1 && number.charAt(0) == '/') addDivBox("0", split[0]);
                }
                else GuiDriver.guiObj.update(); //calls our guidriver object and tells it to start updating. probably bad bug solving w/ if statement
 
