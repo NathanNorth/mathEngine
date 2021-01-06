@@ -4,10 +4,12 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 public class Gui extends JPanel{
-    JTextField field;
-    JLabel label;
+    private JLabel label;
+    private JPanel box;
+    private InputBox object;
+    
     public Gui(){
-        setLayout(new BorderLayout());
+        setLayout(new FlowLayout());
          
         /*
         field = new JTextField(25);
@@ -29,11 +31,20 @@ public class Gui extends JPanel{
         });
         add(field);
          */
-        JPanel box = new InputBox();
-        add(box, BorderLayout.NORTH);
+        JPanel main = new JPanel(new BorderLayout());
+        
+        object = new InputBox();
+        box = object;
+        main.add(box, BorderLayout.NORTH);
          
         label = new JLabel("0.0");
         label.setFont(new Font("Serif", Font.BOLD, 30));
-        add(label, BorderLayout.SOUTH);
+        main.add(label, BorderLayout.SOUTH);
+        
+        add(main);
+    }
+    
+    public void Update() {
+       label.setText(Processor.process(Cleaner.highLevelClean(object.getNum())));
     }
 }
