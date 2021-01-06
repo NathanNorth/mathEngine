@@ -3,6 +3,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+
+//maybe this could be static lmao
 public class Gui extends JPanel{
     private JLabel label;
     private InputBox box;
