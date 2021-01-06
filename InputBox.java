@@ -12,23 +12,25 @@ public class InputBox extends JPanel {
    public InputBox() {
       System.out.println("bro");
       field = new JTextField(25);
+      
+      //disgusting code implements a fully custom document listener class inline because of couse it does.
       field.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                number = field.getText();
-               GuiDriver.guiObj.Update();
+               GuiDriver.guiObj.update();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                number = field.getText();
-               GuiDriver.guiObj.Update();
+               GuiDriver.guiObj.update();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
                number = field.getText();
-               GuiDriver.guiObj.Update();
+               GuiDriver.guiObj.update();
             }
       });
       add(field);

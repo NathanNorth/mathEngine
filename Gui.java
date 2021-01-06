@@ -44,7 +44,7 @@ public class Gui extends JPanel{
         add(main);
     }
     
-    public void Update() {
+    public void update() {
        label.setText(Processor.process(Cleaner.highLevelClean(object.getNum())));
     }
 }
