@@ -12,7 +12,7 @@ public class Expression {
       this.inputEquation = inputEquation;
       verbose = false;
  
-      evaluatedEquation = pemdas(clean(this.inputEquation));
+      evaluatedEquation = pemdas(lowLevelClean(this.inputEquation));
       numInit++;
    }
    
@@ -21,12 +21,12 @@ public class Expression {
       this.inputEquation = inputEquation;
       this.verbose = verbose;
     
-      evaluatedEquation = pemdas(clean(this.inputEquation));
+      evaluatedEquation = pemdas(lowLevelClean(this.inputEquation));
       numInit++;
    }
    
    //cleans input string to fix formatting requirements for pemdas method. This is also where program should error in the future for things like forgetting a parenthesis.
-   private String clean(String in) {
+   private String lowLevelClean(String in) {
       String cleanedEquation = in; //working string
       
       //works way through string finding instances of numbers outside of parenthesis (eg 2(2) becomes 2*(2))
@@ -41,11 +41,21 @@ public class Expression {
       //fixes crashes for starting with + or -
       if(cleanedEquation.charAt(0) == '-' || cleanedEquation.charAt(0) == '+') cleanedEquation = "0" + cleanedEquation;
       
+      //code to replace a - with +- if the minus is an operator. if - is being used as a sign this code changes nothing.
+      for(int i = 1; i < cleanedEquation.length(); i++) {
+         if(cleanedEquation.charAt(i) == '-' && !matchesChar(cleanedEquation, i - 1)) { //checks to make sure our - is being used as an operator, and isn't already +-
+            cleanedEquation = cleanedEquation.substring(0, i) + "+-" + cleanedEquation.substring(i + 1, cleanedEquation.length());
+         }
+      }
+      
       //addition and subtraction cleaning
       cleanedEquation = cleanedEquation.replace(" ", ""); //delete all whitespace
       cleanedEquation = cleanedEquation.replace("--", "+"); //double negative is a positive
-      cleanedEquation = cleanedEquation.replace("-", "+-"); //any subtraction is + a negative number
-      cleanedEquation = cleanedEquation.replace("++", "+"); //corrects for potential problems with previous line of code (2+-2 becomes 2++-2)
+      
+      //should not be needed anymore
+      //cleanedEquation = cleanedEquation.replace("-", "+-"); //any subtraction is + a negative number
+      //cleanedEquation = cleanedEquation.replace("++", "+"); //corrects for potential problems with previous line of code (2+-2 becomes 2++-2)
+      
       return cleanedEquation;
    }
 
@@ -67,7 +77,7 @@ public class Expression {
             beReplaced[o] = stringIn.substring(pIndex[o], pIndex[o + 1] + 1);
             
             //finds what to replace it by reccuring pemdas until we have no parenth left
-            replaceW[o] = pemdas(clean(stringIn.substring((pIndex[o] + 1), pIndex[o + 1]))); //we clean here incase our parenthesis starts with a + or -. kinda scuffed
+            replaceW[o] = pemdas(lowLevelClean(stringIn.substring((pIndex[o] + 1), pIndex[o + 1]))); //we clean here incase our parenthesis starts with a + or -. kinda scuffed
             
             if(verbose) {
                //debug printing
@@ -128,6 +138,11 @@ public class Expression {
          add += Double.parseDouble(addition[i]);
       }
       return "" + add;
+   }
+   
+   //returns true if the char at loc matches ANY of the operator chars
+   private boolean matchesChar(String in, int loc) {
+      return in.charAt(loc) == '^' || in.charAt(loc) == '*' || in.charAt(loc) == '/' || in.charAt(loc) == '+';
    }
    
    //returns a table with the open and closes parenths
