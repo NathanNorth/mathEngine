@@ -146,7 +146,7 @@ public class Expression {
    }
    
    //returns a table with the open and closes parenths
-   private int[] pTable(String str) {
+   public static int[] pTable(String str) {
       int[] array = new int[str.length()];
       int pos = 0; //number relative to being inside paren
       int aPos = 0; //THIS MUST BE RESET HERE so recursion works properly. How many parenthesis to worry about
