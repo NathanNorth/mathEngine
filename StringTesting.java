@@ -4,7 +4,7 @@ import expressions.*;
 public class StringTesting {
    
    public static void main(String[] args) {
-      //Debug 2
+      //Debug
       expressions.Expression pog = expressions.Expression.parse("2*(1+1*(13+6))");
       System.out.println(pog);
    
