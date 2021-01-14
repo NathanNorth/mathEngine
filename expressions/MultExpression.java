@@ -4,12 +4,12 @@ public class MultExpression extends Expression {
    private Expression leftE;
    private Expression rightE;
    
-   public MultExpression(Expression rightE, Expression leftE) {
+   public MultExpression(Expression leftE, Expression rightE) {
       this.rightE = rightE;
       this.leftE = leftE;
    }
    
    public String toString() {
-      return rightE.toString() + "*" + leftE.toString();
+      return leftE.toString() + "*" + rightE.toString();
    }
 }
