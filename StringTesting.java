@@ -1,8 +1,13 @@
 import java.util.Scanner;
+import expressions.*;
 
 public class StringTesting {
    
    public static void main(String[] args) {
+      //Debug
+      expressions.Expression pog = expressions.Expression.parse("2*(1+1)");
+      System.out.println(pog);
+   
       System.out.println("Equation:");
       Scanner in = new Scanner(System.in);
       String num1 = Processor.process(Cleaner.highLevelClean(in.nextLine()));
