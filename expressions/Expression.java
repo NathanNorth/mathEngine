@@ -8,16 +8,28 @@ public class Expression {
    }
    
    public static Expression parse(String in) {
-      ArrayList<Integer> numList = new ArrayList<>();
+      ArrayList<Integer> numList = new ArrayList<>(); //list of index for operators
       ArrayList<Character> charList = new ArrayList<>();
-      int pos = 0;
+
+      ArrayList<Integer> numListP = new ArrayList<>(); //list of index for parenthesis
+      int pos = 0; //how deep inside parenthesis we are
+
       for(int i = 0; i < in.length(); i++) {
-         //runs every time we have a char
-         if(isOperator(Character.toString(in.charAt(i)))) {
+         if(pos == 0 && in.charAt(i) == '(') numListP.add(i);
+         if(in.charAt(i) == '(') pos++;
+         if(in.charAt(i) == ')') pos--;
+         if(pos == 0 && in.charAt(i) == ')') numListP.add(i);
+
+         //runs every time we have a char and aren't inside parenthesis
+         if(pos == 0 && isOperator(Character.toString(in.charAt(i)))) {
             numList.add(i);
             charList.add(in.charAt(i));
          }
       }
+      if(numList.size() == 0 && in.charAt(0) == '(') {
+         return new ParenthExpression(parse(in.substring(1, in.length() - 1)));
+      }
+
       //if we get a literal send it back
       if (numList.size() == 0) return new ExpressionLiteral(in);
 
@@ -26,43 +38,34 @@ public class Expression {
          //divide our equation along the first operator
          String left = in.substring(0, numList.get(0));
          String right = in.substring(numList.get(0) + 1);
-         switch(charList.get(0)) {
-               case '+':
-                  return new AddExpression(new ExpressionLiteral(left), parse(right));
-
-               case '-':
-                  return new SubtractExpression(new ExpressionLiteral(left), parse(right));
-
-               case '*':
-                  return new MultExpression(new ExpressionLiteral(left), parse(right));
-
-//               case '(': //REQUIRES OPERATORS TO BE IN FRONT OF PARENTHESIS
-//                  int endP = findEnd(in, i); //finds the range we should be passing in
-//                  return new ParenthExpression(parse(in.substring(i + 1, endP))); //just passes in everything
-            }
+         return getExpressionChar(charList.get(0), parse(left), parse(right));
       }
 
       //if we have cringe precendence order we parse until we die
       if(precedenceI(charList.get(0)) >= precedenceI(charList.get(1))) {
-         //divide our equation along the first operator
+         //divide our expression along the second operator
          String left = in.substring(0, numList.get(1));
          String right = in.substring(numList.get(1) + 1);
-         switch(charList.get(1)) {
-            case '+':
-               return new AddExpression(parse(left), parse(right));
-
-            case '-':
-               return new SubtractExpression(parse(left), parse(right));
-
-            case '*':
-               return new MultExpression(parse(left), parse(right));
-
-//               case '(': //REQUIRES OPERATORS TO BE IN FRONT OF PARENTHESIS
-//                  int endP = findEnd(in, i); //finds the range we should be passing in
-//                  return new ParenthExpression(parse(in.substring(i + 1, endP))); //just passes in everything
-         }
+         //returns an expression based on the second operator
+         return getExpressionChar(charList.get(1), parse(left), parse(right));
       }
 
+      //should never run
+      return null;
+   }
+
+   //returns an expression based on a char and two passed through expressions
+   private static Expression getExpressionChar(char c, Expression left, Expression right) {
+      switch(c) {
+         case '+':
+            return new AddExpression(left, right);
+
+         case '-':
+            return new SubtractExpression(left, right);
+
+         case '*':
+            return new MultExpression(left, right);
+      }
       //should never run
       return null;
    }
@@ -78,7 +81,7 @@ public class Expression {
    }
 
    private static Boolean isOperator(String in) {
-      return in.matches("[*+(-]");
+      return in.matches("[*+-]");
    }
 
    //finds the end parenthesis when given a string and a starting parenthesis

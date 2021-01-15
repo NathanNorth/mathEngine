@@ -5,7 +5,7 @@ public class StringTesting {
    
    public static void main(String[] args) {
       //Debug
-      expressions.Expression pog = expressions.Expression.parse("7*5+2-7*9");
+      expressions.Expression pog = expressions.Expression.parse("1+3*(4+5)-7");
       System.out.println(pog);
    
       System.out.println("Equation:");
