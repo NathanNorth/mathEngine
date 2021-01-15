@@ -3,22 +3,17 @@ package expressions;
 import java.util.ArrayList;
 
 public class Expression {
-   public Expression() {
-   
-   }
-   
+   public Expression() { }
+
    public static Expression parse(String in) {
       ArrayList<Integer> numList = new ArrayList<>(); //list of index for operators
       ArrayList<Character> charList = new ArrayList<>();
 
-      ArrayList<Integer> numListP = new ArrayList<>(); //list of index for parenthesis
       int pos = 0; //how deep inside parenthesis we are
 
       for(int i = 0; i < in.length(); i++) {
-         if(pos == 0 && in.charAt(i) == '(') numListP.add(i);
          if(in.charAt(i) == '(') pos++;
          if(in.charAt(i) == ')') pos--;
-         if(pos == 0 && in.charAt(i) == ')') numListP.add(i);
 
          //runs every time we have a char and aren't inside parenthesis
          if(pos == 0 && isOperator(Character.toString(in.charAt(i)))) {
@@ -26,7 +21,9 @@ public class Expression {
             charList.add(in.charAt(i));
          }
       }
-      if(numList.size() == 0 && in.charAt(0) == '(') {
+
+      //if the only thing inputted to us is parenthesis then just parse whats inside as a parenthexpression
+      if(in.charAt(0) == '(' && numList.size() == 0) {
          return new ParenthExpression(parse(in.substring(1, in.length() - 1)));
       }
 
@@ -38,16 +35,47 @@ public class Expression {
          //divide our equation along the first operator
          String left = in.substring(0, numList.get(0));
          String right = in.substring(numList.get(0) + 1);
-         return getExpressionChar(charList.get(0), parse(left), parse(right));
+         return getExpressionChar(charList.get(0), parse(left), parse(right)); //the left side should already be a literal but we parse just in case its parenthesis
       }
 
       //if we have cringe precendence order we parse until we die
-      if(precedenceI(charList.get(0)) >= precedenceI(charList.get(1))) {
-         //divide our expression along the second operator
+      if(precedenceI(charList.get(0)) > precedenceI(charList.get(1))) {
+
          String left = in.substring(0, numList.get(1));
          String right = in.substring(numList.get(1) + 1);
+
+         //find the item in charlist that has lower precedence than the one before it, and split THERE instead of just one ahead
+
          //returns an expression based on the second operator
          return getExpressionChar(charList.get(1), parse(left), parse(right));
+      }
+
+      //if we have repeated characters we need to be careful about how we call them
+      if(precedenceI(charList.get(0)) == precedenceI(charList.get(1))) {
+         String left = null;
+         String right = null;
+         int index = -1;
+         int currentPrec = precedenceI(charList.get(0)); //keeping track of the lowest precedence we've found
+
+         //this ugly loop finds the lowest precedence to the right of our repeated character
+         for(int i = 0; i < charList.size(); i++) {
+            if(precedenceI(charList.get(i)) < currentPrec) {
+               left = in.substring(0, numList.get(i));
+               right = in.substring(numList.get(i) + 1);
+               index = i;
+               currentPrec = precedenceI(charList.get(i));
+            }
+         }
+
+         //if we didnt find anything lower then we are smth like 1/1/1 and order doesn't matter as much
+         if(left == null) {
+            left = in.substring(0, numList.get(1));
+            right = in.substring(numList.get(1) + 1);
+            return getExpressionChar(charList.get(1), parse(left), parse(right)); //some normal calc if its just straight equals
+         }
+
+         //if we did manage to find something with lower precedence we recur from that number
+         return getExpressionChar(charList.get(index), parse(left), parse(right)); //return code parsed to be split at the right index
       }
 
       //should never run
@@ -65,6 +93,12 @@ public class Expression {
 
          case '*':
             return new MultExpression(left, right);
+
+         case '/':
+            return new DivExpression(left, right);
+
+         case '^':
+            return new PowExpression(left, right);
       }
       //should never run
       return null;
@@ -76,12 +110,12 @@ public class Expression {
       if(in == '-') return 1;
       if(in == '*') return 2;
       if(in == '/') return 3;
-      //if(in == '') return 4;
+      if(in == '^') return 4;
       return -1;
    }
 
    private static Boolean isOperator(String in) {
-      return in.matches("[*+-]");
+      return in.matches("[\\^*+/-]");
    }
 
    //finds the end parenthesis when given a string and a starting parenthesis

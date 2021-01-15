@@ -9,7 +9,5 @@ public class SubtractExpression extends Expression {
         this.leftE = leftE;
     }
 
-    public String toString() {
-        return leftE.toString() + "-" + rightE.toString();
-    }
+    public String toString() { return leftE.toString() + "-" + rightE.toString(); }
 }
