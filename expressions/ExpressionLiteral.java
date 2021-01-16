@@ -6,10 +6,14 @@ public class ExpressionLiteral extends Expression {
    
    public ExpressionLiteral(String in) {
       val = in;
-      
+      super.type = 'L';
+
       //sets constant flag if number is number
-      if(in.matches("[0-9]")) isConstant = true;
-      else isConstant = false;
+      isConstant = in.matches("[0-9]");
+   }
+
+   public Expression distribute() {
+      return this;
    }
    
    public String toString() {

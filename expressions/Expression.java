@@ -3,14 +3,21 @@ package expressions;
 import java.util.ArrayList;
 
 public class Expression {
+
+   protected char type = 'e';
+
    public Expression() { }
+
+   //purely for overriding
+   public Expression distribute() { return null; }
 
    public static Expression parse(String in) {
       ArrayList<Integer> numList = new ArrayList<>(); //list of index for operators
-      ArrayList<Character> charList = new ArrayList<>();
+      ArrayList<Character> charList = new ArrayList<>(); //list of all our operators
 
       int pos = 0; //how deep inside parenthesis we are
 
+      //populates numlist and charlist ignoring parenthesis
       for(int i = 0; i < in.length(); i++) {
          if(in.charAt(i) == '(') pos++;
          if(in.charAt(i) == ')') pos--;
@@ -83,7 +90,7 @@ public class Expression {
    }
 
    //returns an expression based on a char and two passed through expressions
-   private static Expression getExpressionChar(char c, Expression left, Expression right) {
+   public static Expression getExpressionChar(char c, Expression left, Expression right) {
       switch(c) {
          case '+':
             return new AddExpression(left, right);
@@ -104,8 +111,9 @@ public class Expression {
       return null;
    }
 
+   //TODO: Make this a public final list or smth. Kinda dumb as a method
    //returns an int value of precedence for a given operator
-   private static int precedenceI(char in) {
+   public static int precedenceI(char in) {
       if(in == '+') return 0;
       if(in == '-') return 1;
       if(in == '*') return 2;
