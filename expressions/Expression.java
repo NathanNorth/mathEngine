@@ -59,9 +59,12 @@ public class Expression {
 
       //if we have repeated characters we need to be careful about how we call them
       if(precedenceI(charList.get(0)) == precedenceI(charList.get(1))) {
-         String left = null;
-         String right = null;
-         int index = -1;
+
+         //if the upcoming loop doesn't find a character of lower precedence, we have default values that won't break subtraction
+         int index = numList.size() - 1;
+         String left = in.substring(0, numList.get(index));
+         String right = in.substring(numList.get(index) + 1);
+
          int currentPrec = precedenceI(charList.get(0)); //keeping track of the lowest precedence we've found
 
          //this ugly loop finds the lowest precedence to the right of our repeated character
@@ -72,13 +75,6 @@ public class Expression {
                index = i;
                currentPrec = precedenceI(charList.get(i));
             }
-         }
-
-         //if we didnt find anything lower then we are smth like 1/1/1 and order doesn't matter as much
-         if(left == null) {
-            left = in.substring(0, numList.get(1));
-            right = in.substring(numList.get(1) + 1);
-            return getExpressionChar(charList.get(1), parse(left), parse(right)); //some normal calc if its just straight equals
          }
 
          //if we did manage to find something with lower precedence we recur from that number
