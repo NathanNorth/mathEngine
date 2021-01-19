@@ -115,6 +115,7 @@ public class Expression {
       if(in == '*') return 2;
       if(in == '/') return 3;
       if(in == '^') return 4;
+      if(in == 'L') return 99;
       return -1;
    }
 

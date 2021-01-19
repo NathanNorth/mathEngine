@@ -48,7 +48,7 @@ public class MultExpression extends dExpression {
    private Expression multDistribute(Expression literal, Expression set) {
       if (precedenceI('*') > precedenceI(set.type)) { //if we should distribute
          Expression tempLeftE = new MultExpression(literal, ((dExpression)set).getLeftE());
-         Expression tempRightE = new MultExpression(literal, ((dExpression)set).getRightE());
+         Expression tempRightE = new MultExpression(literal, ((dExpression)set).getRightE()).distribute();
 
          //we MUST call distributes on our left and right sides, this is the key to nested distribution
          return getExpressionChar(set.type, tempLeftE.distribute(), tempRightE.distribute());
