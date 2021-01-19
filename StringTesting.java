@@ -5,8 +5,9 @@ public class StringTesting {
    
    public static void main(String[] args) {
       //Debug
-      String test = "(1-2)-(3-4)"; //TODO: throws error lol
+      String test = "1-(2-3+4-(5-(7+8)))";
       //String test = "1*(2+3*(4+5*(6-7*8)))";
+      //String test = "3-(4*5)";
       expressions.Expression pog = expressions.Expression.parse(test);
       System.out.println(pog);
       expressions.Expression bog = expressions.Expression.parse(test).distribute();

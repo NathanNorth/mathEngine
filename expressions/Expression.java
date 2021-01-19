@@ -60,12 +60,21 @@ public class Expression {
       //if we have repeated characters we need to be careful about how we call them
       if(precedenceI(charList.get(0)) == precedenceI(charList.get(1))) {
 
-         //if the upcoming loop doesn't find a character of lower precedence, we have default values that won't break subtraction
-         int index = numList.size() - 1;
-         String left = in.substring(0, numList.get(index));
-         String right = in.substring(numList.get(index) + 1);
+         String left = null;
+         String right = null;
+         int index = -1;
 
          int currentPrec = precedenceI(charList.get(0)); //keeping track of the lowest precedence we've found
+
+         //finds default values that wont break multiplication and subtraction but also aren't the wrong precedence
+         for(int i = charList.size() - 1; i > 0; i--) {
+            if(precedenceI(charList.get(i)) == currentPrec) {
+               left = in.substring(0, numList.get(i));
+               right = in.substring(numList.get(i) + 1);
+               index = i;
+               break;
+            }
+         }
 
          //this ugly loop finds the lowest precedence to the right of our repeated character
          for(int i = 0; i < charList.size(); i++) {

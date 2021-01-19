@@ -28,7 +28,7 @@ public class SubtractExpression extends dExpression {
         expression of higher precedence than subtraction). Any nested subtraction will always be in the left term. That
         means the ONLY time subtraction doesn't distribute identically to addition is when we have to subtract something
         in parenthesis. When that happens we have to distribute the negative hence this hard to follow bit of code. */
-        if(rightE instanceof ParenthExpression || precedenceI(rightE.type) <= 1) {
+        if(rightE.type == '-' || rightE.type == '+') { //since types show through parenthesis we can check if we need to distribute just by checking the type
             //we get flipped sign
             char flipped;
             if(rightE.type == '-') flipped = '+';
