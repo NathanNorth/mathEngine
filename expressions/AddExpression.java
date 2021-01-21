@@ -2,13 +2,13 @@ package expressions;
 
 //import expressions.ExpressionLiteral;
 
-public class AddExpression extends dExpression {
+public class AddExpression extends TwoSidedExpression {
 
    private Expression leftE;
    private Expression rightE;
 
    public AddExpression(Expression leftE, Expression rightE) {
-      super.type = '+';
+      super('+');
 
       this.rightE = rightE;
       this.leftE = leftE;

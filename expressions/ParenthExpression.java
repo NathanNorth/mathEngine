@@ -6,8 +6,8 @@ public class ParenthExpression extends Expression {
    public final boolean isLiteral;
    
    public ParenthExpression(Expression contents) {
+      super(contents.type); //parenthesis are the type of their contents
       this.contents = contents;
-      super.type = contents.type; //parenthesis are the type of their contents
 
       //flag for the distribute class to use
       isLiteral = contents instanceof ExpressionLiteral;

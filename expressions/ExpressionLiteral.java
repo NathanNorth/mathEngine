@@ -5,8 +5,8 @@ public class ExpressionLiteral extends Expression {
    public final boolean isConstant;
    
    public ExpressionLiteral(String in) {
+      super('L');
       val = in;
-      super.type = 'L';
 
       //sets constant flag if number is number
       isConstant = in.matches("[0-9]");

@@ -1,13 +1,11 @@
 package expressions;
 
-import javax.swing.text.StyledEditorKit;
-
-public class MultExpression extends dExpression {
+public class MultExpression extends TwoSidedExpression {
    private Expression leftE;
    private Expression rightE;
    
    public MultExpression(Expression leftE, Expression rightE) {
-      super.type = '*';
+      super('*');
 
       this.rightE = rightE;
       this.leftE = leftE;
@@ -15,9 +13,9 @@ public class MultExpression extends dExpression {
 
    public Expression distribute() {
 
-      //finds out right and left are plural by checking if they aren't a literal
-      boolean rightP = rightE.type != 'L'; //right plural
-      boolean leftP = leftE.type != 'L'; //left plural
+      //checks if right and left side are EFFECTIVE plurals/literals //TODO: This should make the rest of this class (especially multdistribute) way simpler
+      boolean rightP = precedenceI(rightE.distribute().type) < precedenceI('*'); //right plural
+      boolean leftP = precedenceI(leftE.distribute().type) < precedenceI('*'); //left plural
 
       //two literals
       if(!leftP && !rightP) {
@@ -37,9 +35,15 @@ public class MultExpression extends dExpression {
          return multDistribute(rightE.distribute(), leftE.distribute());
       }
 
-      //both are plural (foil time)
-      if(leftP && rightP) {
-         //TODO: Foil terms
+      //both are plural (foil time). This is really just adding the distribution of the left to the distribution of the right
+      if(leftP && rightP) { //this looks very similar to the multDistribute method (maybe implement reccursion)
+         Expression leftL = ((TwoSidedExpression)leftE.distribute()).getLeftE();
+         Expression leftR = ((TwoSidedExpression)leftE.distribute()).getRightE();
+         Expression firstD = multDistribute(leftL.distribute(), rightE.distribute());
+         Expression secondD = multDistribute(leftR.distribute(), rightE.distribute());
+
+         //innitiallize the right side inside parenthesis and distribute incase theres a negative that needs to distribute
+         return getExpressionChar(leftE.type, firstD, new ParenthExpression(secondD)).distribute();
       }
 
       return null;
@@ -47,14 +51,20 @@ public class MultExpression extends dExpression {
 
    private Expression multDistribute(Expression literal, Expression set) {
       if (precedenceI('*') > precedenceI(set.type)) { //if we should distribute
-         Expression tempLeftE = new MultExpression(literal, ((dExpression)set).getLeftE());
-         Expression tempRightE = new MultExpression(literal, ((dExpression)set).getRightE()).distribute();
+         Expression tempLeftE = new MultExpression(literal, ((TwoSidedExpression)set).getLeftE()).distribute(); //TODO: THIS WASN'T ORIGINALLY DISTRIBUTED, NEED MORE TESTING TO VALIDATE
+         Expression tempRightE = new MultExpression(literal, ((TwoSidedExpression)set).getRightE()).distribute(); //maybe the previous line to-do makes this distribute irrelevant
 
          //we MUST call distributes on our left and right sides, this is the key to nested distribution
          return getExpressionChar(set.type, tempLeftE.distribute(), tempRightE.distribute());
       }
       else return new MultExpression(literal, set.distribute()); //if set has higher precedence we dont distribute
    }
+
+   @Override
+   public Expression getLeftE() { return leftE; }
+
+   @Override
+   public Expression getRightE() { return rightE; }
 
    public String toString() {
       return leftE.toString() + "*" + rightE.toString();

@@ -4,9 +4,17 @@ import java.util.ArrayList;
 
 public class Expression {
 
-   protected char type = 'e';
+   public final char type;
 
-   public Expression() { }
+   //default constructor
+   public Expression() {
+      type = 'e';
+   }
+
+   //construct with specific type
+   public Expression(char type) {
+      this.type = type;
+   }
 
    //purely for overriding
    public Expression distribute() { return null; }
@@ -22,7 +30,7 @@ public class Expression {
          if(in.charAt(i) == '(') pos++;
          if(in.charAt(i) == ')') pos--;
 
-         //runs every time we have a char and aren't inside parenthesis
+         //runs every time we have a operator and aren't inside parenthesis
          if(pos == 0 && isOperator(Character.toString(in.charAt(i)))) {
             numList.add(i);
             charList.add(in.charAt(i));
@@ -87,7 +95,7 @@ public class Expression {
          }
 
          //if we did manage to find something with lower precedence we recur from that number
-         return getExpressionChar(charList.get(index), parse(left), parse(right)); //return code parsed to be split at the right index
+         return getExpressionChar(charList.get(index), parse(left), parse(right)); //return code parsed to be split at the new index
       }
 
       //should never run
@@ -129,7 +137,7 @@ public class Expression {
    }
 
    private static Boolean isOperator(String in) {
-      return in.matches("[\\^*+/-]");
+      return in.matches("[\\^*+/-]"); //TODO LEARN REGEX FOR REAL THIS TIME
    }
 
    //finds the end parenthesis when given a string and a starting parenthesis
