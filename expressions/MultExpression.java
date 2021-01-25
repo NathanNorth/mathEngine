@@ -25,7 +25,7 @@ public class MultExpression extends TwoSidedExpression {
       //left is literal and right is plural
 
       /* We distribute the left because we don't know if its a literal in parenthesis eg. "((2))*(7+1)". We distribute
-      the right because it probably has parenthesis around it and might even be nested*/
+      the right because it probably has parenthesis around it and might even be nested 'a*(b*(c+d)) */
       if(!leftP && rightP) {
          return multDistribute(leftE.distribute(), rightE.distribute());
       }
@@ -36,28 +36,25 @@ public class MultExpression extends TwoSidedExpression {
       }
 
       //both are plural (foil time). This is really just adding the distribution of the left to the distribution of the right
-      if(leftP && rightP) { //this looks very similar to the multDistribute method (maybe implement reccursion)
-         Expression leftL = ((TwoSidedExpression)leftE.distribute()).getLeftE();
+      if(leftP && rightP) { //this looks very similar to the multDistribute method (todo: maybe implement reccursion)
+         Expression leftL = ((TwoSidedExpression)leftE.distribute()).getLeftE(); //distribute to rid of parenthesis
          Expression leftR = ((TwoSidedExpression)leftE.distribute()).getRightE();
          Expression firstD = multDistribute(leftL.distribute(), rightE.distribute());
          Expression secondD = multDistribute(leftR.distribute(), rightE.distribute());
 
          //innitiallize the right side inside parenthesis and distribute incase theres a negative that needs to distribute
-         return getExpressionChar(leftE.type, firstD, new ParenthExpression(secondD)).distribute();
+         return getExpressionChar(leftE.distribute().type, firstD, new ParenthExpression(secondD)).distribute();
       }
 
       return null;
    }
 
    private Expression multDistribute(Expression literal, Expression set) {
-      if (precedenceI('*') > precedenceI(set.type)) { //if we should distribute
-         Expression tempLeftE = new MultExpression(literal, ((TwoSidedExpression)set).getLeftE()).distribute(); //TODO: THIS WASN'T ORIGINALLY DISTRIBUTED, NEED MORE TESTING TO VALIDATE
-         Expression tempRightE = new MultExpression(literal, ((TwoSidedExpression)set).getRightE()).distribute(); //maybe the previous line to-do makes this distribute irrelevant
+      Expression tempLeftE = new MultExpression(literal, ((TwoSidedExpression)set).getLeftE()); //TODO: THIS WASN'T ORIGINALLY DISTRIBUTED, NEED MORE TESTING TO VALIDATE
+      Expression tempRightE = new MultExpression(literal, ((TwoSidedExpression)set).getRightE()); //maybe the previous line to-do makes this distribute irrelevant
 
-         //we MUST call distributes on our left and right sides, this is the key to nested distribution
-         return getExpressionChar(set.type, tempLeftE.distribute(), tempRightE.distribute());
-      }
-      else return new MultExpression(literal, set.distribute()); //if set has higher precedence we dont distribute
+      //we MUST call distributes on our left and right sides, this is the key to nested distribution
+      return getExpressionChar(set.type, tempLeftE.distribute(), tempRightE).distribute();
    }
 
    @Override

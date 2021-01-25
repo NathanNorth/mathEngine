@@ -11,6 +11,9 @@ public class DivExpression extends TwoSidedExpression {
         this.leftE = leftE;
     }
 
+    /* Earlier version of this method were a good example of over.distribution. Because we abstract out the recursive
+    distribute calls to the outer layer if statements, the distribute submethods should not need any .distributes inside
+    themselves */
     public Expression distribute() {
 
         //finds out right and left are plural by checking if they are effective plural. We distribute here in case the distributed types aren't what they seem.
@@ -44,36 +47,20 @@ public class DivExpression extends TwoSidedExpression {
 
     //distributes if literal / plural
     private Expression divDistribute1(Expression literal, Expression set) {
-        if (precedenceI('*') > precedenceI(set.type)) { //if we should distribute
-            Expression tempLeftE = new DivExpression(literal, ((TwoSidedExpression)set).getLeftE()).distribute();
-            Expression tempRightE = new DivExpression(literal, ((TwoSidedExpression)set).getRightE()).distribute(); //TODO: DOES THIS NEED TO REDISTRIBUTE
+        Expression tempLeftE = new DivExpression(literal, ((TwoSidedExpression)set).getLeftE());
+        Expression tempRightE = new DivExpression(literal, ((TwoSidedExpression)set).getRightE());
 
-            //we MUST call distributes on our left and right sides, this is the key to nested distribution
-            return getExpressionChar(set.type, tempLeftE.distribute(), tempRightE.distribute());
-        }
-        else { //TODO: Should be irrelevant as presently written since we only call this method with an effective plural
-            //if denominator is plural put it in parenthesis for clarity
-            if(set.type != 'L') return new DivExpression(literal, new ParenthExpression(set.distribute()));
-            //if denom is literal we good
-            else return new DivExpression(literal, set.distribute()); //if set has higher precedence we dont distribute
-        }
+        //we MUST call distribute on this (which is an effective distribute on the left and right side) because of nested same operator expressions 'a/(b+c+d)'
+        return getExpressionChar(set.type, tempLeftE, tempRightE).distribute();
     }
 
     //divides a plural by a literal
     private Expression divDistribute2(Expression set, Expression literal) {
-        if (precedenceI('*') > precedenceI(set.type)) { //if we should distribute
-            Expression tempLeftE = new DivExpression(((TwoSidedExpression)set).getLeftE(), literal).distribute();
-            Expression tempRightE = new DivExpression(((TwoSidedExpression)set).getRightE(), literal).distribute();
+        Expression tempLeftE = new DivExpression(((TwoSidedExpression)set).getLeftE(), literal);
+        Expression tempRightE = new DivExpression(((TwoSidedExpression)set).getRightE(), literal);
 
-            //we MUST call distributes on our left and right sides, this is the key to nested distribution
-            return getExpressionChar(set.type, tempLeftE.distribute(), tempRightE.distribute());
-        }
-        else {
-            //if denominator is plural put it in parenthesis for clarity
-            if(literal.type != 'L') return new DivExpression(literal, new ParenthExpression(set.distribute()));
-            //if denom is literal we good
-            else return new DivExpression(literal, set.distribute()); //if set has higher precedence we dont distribute
-        }
+        //we MUST call distribute on this (which is an effective distribute on the left and right side) because of nested same operator expressions
+        return getExpressionChar(set.type, tempLeftE, tempRightE).distribute();
     }
 
     @Override
@@ -82,7 +69,16 @@ public class DivExpression extends TwoSidedExpression {
     @Override
     public Expression getRightE() { return rightE; }
 
+    //see pow version of this method for comments
     public String toString() {
-        return "[" + leftE.toString() + "]/[" + rightE.toString() +"]";
+        String leftS;
+        String rightS;
+
+        if(leftE.type == 'L' || leftE instanceof ParenthExpression)  leftS =  leftE.toString();
+        else leftS = "[" + leftE.toString() + "]";
+        if(rightE.type == 'L' || rightE instanceof ParenthExpression)  rightS =  rightE.toString();
+        else rightS = "[" + rightE.toString() + "]";
+
+        return leftS + "/" + rightS;
     }
 }

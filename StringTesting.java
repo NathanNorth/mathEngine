@@ -12,7 +12,12 @@ public class StringTesting {
       //String test = "c*(13/(a+b*7))";
       //String test = "(a/(1/(b-6)+c*e))*(1+2)";
       //String test = "(1/(2+3))/a";
-      String test = "a/b^2";
+      //String test = "(8)^2";
+      String test = "(12+1)^_2.0"; //todo: think about if it makes the most sense for this to just do negative exponent distribution
+      //String test = "a/(b+c+d)";
+      //String test = "1/(a*(3-2))";
+      //String test = "((a*b)^c)^d";
+
       expressions.Expression pog = expressions.Expression.parse(test);
       System.out.println(pog);
       expressions.Expression bog = expressions.Expression.parse(test).distribute();
