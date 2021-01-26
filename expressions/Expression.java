@@ -39,7 +39,7 @@ public class Expression {
 
       //if the only thing inputted to us is parenthesis then just parse whats inside as a parenthexpression
       if(in.charAt(0) == '(' && numList.size() == 0) {
-         return new ParenthExpression(parse(in.substring(1, in.length() - 1)));
+         return parse(in.substring(1, in.length() - 1));
       }
 
       //if we get a literal send it back
@@ -101,6 +101,8 @@ public class Expression {
       //should never run
       return null;
    }
+
+   //todo: maybe make constructors protected/ move more people over to getexpressionchar (should be renamed to getCharConstructor)
 
    //returns an expression based on a char and two passed through expressions
    public static Expression getExpressionChar(char c, Expression left, Expression right) {

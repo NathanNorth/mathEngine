@@ -15,41 +15,44 @@ public class PowExpression extends Expression {
 
     public Expression distribute() {
 
+        base = base.distribute();
+        power = power.distribute();
+
         //short circut check if power is int. We call distribute before casting incase the object is in redundant parenthesis '(a+b)^(c)'
         boolean isInt = power.type == 'L' &&
-                ((ExpressionLiteral)power.distribute()).isConstant &&
-                ((ExpressionLiteral)power.distribute()).isInt;
+                ((ExpressionLiteral)power).isConstant &&
+                ((ExpressionLiteral)power).isInt;
 
         //if base is literal or pow
-        if(precedenceI(base.distribute().type) > precedenceI('*')) {
-            return new PowExpression(base.distribute(), power.distribute());
+        if(precedenceI(base.distribute().type) > precedenceI('/')) {
+            return new PowExpression(base, power);
         }
 
         //if base is * or / (which would only happen inside parenthesis) we will distribute the power
-        if(base.distribute().type == '*' || base.distribute().type == '/') {
-            Expression tempL = new PowExpression(((TwoSidedExpression)base.distribute()).getLeftE(), power); //call distribute to escape parenthesis
-            Expression tempR = new PowExpression(((TwoSidedExpression)base.distribute()).getRightE(), power);
+        if(base.type == '*' || base.type == '/') {
+            Expression tempL = new PowExpression(((TwoSidedExpression)base).getLeftE(), power);
+            Expression tempR = new PowExpression(((TwoSidedExpression)base).getRightE(), power);
 
-            return getExpressionChar(base.distribute().type, tempL, tempR).distribute(); //distribute so that division won't look bad
+            return getExpressionChar(base.type, tempL, tempR).distribute(); //distribute so that division won't look bad
         }
 
         /* This section of code will run if we have a power/base combo that cant be distributed to. We know this base
         (which must be a + or - at this point in the code) can't be distributed to by a nonInt and so we just return a
         pow statement when we don't have an int*/
         if(!isInt) {
-            return new PowExpression(base.distribute(), power.distribute());
+            return new PowExpression(base, power);
         } //because we have an int here we CAN distribute by returning a bunch of foil-able multiplcation statements.
-        else if(base.distribute().type == '-' || base.distribute().type == '+') { //we have int pow and base to distribute
-            double powerVal = ((ExpressionLiteral)power.distribute()).getDouble(); //we distribute here in case power is in redundant parenthesis
+        else if(base.type == '-' || base.type == '+') { //we have int pow and base to distribute
+            double powerVal = ((ExpressionLiteral)power).getDouble(); //we distribute here in case power is in redundant parenthesis
 
             if(powerVal < 0) { //subzero powers return a division sign with a positive power value below todo: maybe we want this to just distribute with - exponents?
                 Expression newPow = new ExpressionLiteral(-1 * powerVal + "");
-                return new DivExpression(new ExpressionLiteral("1"), new PowExpression(base.distribute(), newPow)).distribute();
+                return new DivExpression(new ExpressionLiteral("1"), new PowExpression(base, newPow)).distribute();
             }
-            if(powerVal == 1) return base.distribute(); //set to the 1st power is that set '(a+b)^1 == a+b'
+            if(powerVal == 1) return base; //set to the 1st power is that set '(a+b)^1 == a+b'
             if(powerVal > 1) {
                 Expression newPow = new ExpressionLiteral((int)(powerVal - 1) + "");
-                return new MultExpression(base.distribute(), new PowExpression(base, newPow)).distribute();
+                return new MultExpression(base, new PowExpression(base, newPow)).distribute();
             }
         }
         //should never run

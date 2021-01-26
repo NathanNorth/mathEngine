@@ -15,30 +15,32 @@ public class DivExpression extends TwoSidedExpression {
     distribute calls to the outer layer if statements, the distribute submethods should not need any .distributes inside
     themselves */
     public Expression distribute() {
+        leftE = leftE.distribute();
+        rightE = rightE.distribute();
 
         //finds out right and left are plural by checking if they are effective plural. We distribute here in case the distributed types aren't what they seem.
-        boolean rightP = precedenceI(rightE.distribute().type) < precedenceI('*'); //right plural
-        boolean leftP = precedenceI(leftE.distribute().type) < precedenceI('*'); //left plural
+        boolean rightP = precedenceI(rightE.type) < precedenceI('*'); //right plural
+        boolean leftP = precedenceI(leftE.type) < precedenceI('*'); //left plural
 
         //if we have literal literals "4/5" or effective lit and lit "a*b/e"
-        if((!leftP && rightE.type == 'L') || (leftE.distribute().type == '^' && rightE.distribute().type == '^')) {
-            return new DivExpression(leftE.distribute(), rightE.distribute()); //distribute for parenthesis
+        if((!leftP && rightE.type == 'L') || (leftE.type == '^' && rightE.type == '^')) {
+            return new DivExpression(leftE, rightE); //distribute for parenthesis
         }
 
         /*Runs when we have two effective literals "a*b/c*d" or two effective plurals (we cant distribute) "a+b/c+d".
         No distribution here.*/
         if((!leftP && !rightP) || (leftP && rightP)) {
-            return new DivExpression(leftE.distribute(), rightE.distribute());
+            return new DivExpression(leftE, rightE);
         }
 
         //left literal right effective plural
         if(!leftP && rightP) {
-            return divDistribute1(leftE.distribute(), rightE.distribute());
+            return divDistribute1(leftE, rightE);
         }
 
         //left plural right literal
         if(leftP && !rightP) {
-            return divDistribute2(leftE.distribute(), rightE.distribute());
+            return divDistribute2(leftE, rightE);
         }
 
         //should never run

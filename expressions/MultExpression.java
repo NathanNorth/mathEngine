@@ -13,13 +13,16 @@ public class MultExpression extends TwoSidedExpression {
 
    public Expression distribute() {
 
-      //checks if right and left side are EFFECTIVE plurals/literals //TODO: This should make the rest of this class (especially multdistribute) way simpler
-      boolean rightP = precedenceI(rightE.distribute().type) < precedenceI('*'); //right plural
-      boolean leftP = precedenceI(leftE.distribute().type) < precedenceI('*'); //left plural
+      rightE = rightE.distribute();
+      leftE = leftE.distribute();
 
-      //two literals
+      //checks if right and left side are EFFECTIVE plurals/literals //TODO: This should make the rest of this class (especially multdistribute) way simpler
+      boolean rightP = precedenceI(rightE.type) < precedenceI('*'); //right plural
+      boolean leftP = precedenceI(leftE.type) < precedenceI('*'); //left plural
+
+      //two effective literals
       if(!leftP && !rightP) {
-         return new MultExpression(leftE.distribute(), rightE.distribute()); //distribute to rid of parenthesis
+         return new MultExpression(leftE, rightE);
       }
 
       //left is literal and right is plural
@@ -27,23 +30,23 @@ public class MultExpression extends TwoSidedExpression {
       /* We distribute the left because we don't know if its a literal in parenthesis eg. "((2))*(7+1)". We distribute
       the right because it probably has parenthesis around it and might even be nested 'a*(b*(c+d)) */
       if(!leftP && rightP) {
-         return multDistribute(leftE.distribute(), rightE.distribute());
+         return multDistribute(leftE, rightE);
       }
 
       //right is literal and left is plural
       if(leftP && !rightP) {
-         return multDistribute(rightE.distribute(), leftE.distribute());
+         return multDistribute(rightE, leftE);
       }
 
       //both are plural (foil time). This is really just adding the distribution of the left to the distribution of the right
       if(leftP && rightP) { //this looks very similar to the multDistribute method (todo: maybe implement reccursion)
-         Expression leftL = ((TwoSidedExpression)leftE.distribute()).getLeftE(); //distribute to rid of parenthesis
-         Expression leftR = ((TwoSidedExpression)leftE.distribute()).getRightE();
-         Expression firstD = multDistribute(leftL.distribute(), rightE.distribute());
-         Expression secondD = multDistribute(leftR.distribute(), rightE.distribute());
+         Expression leftL = ((TwoSidedExpression)leftE).getLeftE(); //distribute to rid of parenthesis
+         Expression leftR = ((TwoSidedExpression)leftE).getRightE();
+         Expression firstD = multDistribute(leftL.distribute(), rightE); //todo do we need distribute call on leftL?
+         Expression secondD = multDistribute(leftR.distribute(), rightE);
 
-         //innitiallize the right side inside parenthesis and distribute incase theres a negative that needs to distribute
-         return getExpressionChar(leftE.distribute().type, firstD, new ParenthExpression(secondD)).distribute();
+         //initialize the right side inside parenthesis and distribute incase theres a negative that needs to distribute
+         return getExpressionChar(leftE.type, firstD, secondD).distribute();
       }
 
       return null;
@@ -54,7 +57,7 @@ public class MultExpression extends TwoSidedExpression {
       Expression tempRightE = new MultExpression(literal, ((TwoSidedExpression)set).getRightE()); //maybe the previous line to-do makes this distribute irrelevant
 
       //we MUST call distributes on our left and right sides, this is the key to nested distribution
-      return getExpressionChar(set.type, tempLeftE.distribute(), tempRightE).distribute();
+      return getExpressionChar(set.type, tempLeftE, tempRightE).distribute();
    }
 
    @Override
@@ -64,6 +67,14 @@ public class MultExpression extends TwoSidedExpression {
    public Expression getRightE() { return rightE; }
 
    public String toString() {
-      return leftE.toString() + "*" + rightE.toString();
+      String leftS;
+      String rightS;
+
+      if(leftE.type == 'L' || leftE.type == '*')  leftS =  leftE.toString();
+      else leftS = "[" + leftE.toString() + "]";
+      if(rightE.type == 'L' || rightE.type == '*')  rightS =  rightE.toString();
+      else rightS = "[" + rightE.toString() + "]";
+
+      return leftS + "*" + rightS;
    }
 }
