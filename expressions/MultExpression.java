@@ -1,14 +1,9 @@
 package expressions;
 
 public class MultExpression extends TwoSidedExpression {
-   private Expression leftE;
-   private Expression rightE;
    
    public MultExpression(Expression leftE, Expression rightE) {
-      super('*');
-
-      this.rightE = rightE;
-      this.leftE = leftE;
+      super('*',leftE, rightE);
    }
 
    public Expression distribute() {
@@ -42,8 +37,8 @@ public class MultExpression extends TwoSidedExpression {
       if(leftP && rightP) { //this looks very similar to the multDistribute method (todo: maybe implement reccursion)
          Expression leftL = ((TwoSidedExpression)leftE).getLeftE(); //distribute to rid of parenthesis
          Expression leftR = ((TwoSidedExpression)leftE).getRightE();
-         Expression firstD = multDistribute(leftL.distribute(), rightE); //todo do we need distribute call on leftL?
-         Expression secondD = multDistribute(leftR.distribute(), rightE);
+         Expression firstD = multDistribute(leftL, rightE);
+         Expression secondD = multDistribute(leftR, rightE);
 
          //initialize the right side inside parenthesis and distribute incase theres a negative that needs to distribute
          return getExpressionChar(leftE.type, firstD, secondD).distribute();
@@ -53,18 +48,12 @@ public class MultExpression extends TwoSidedExpression {
    }
 
    private Expression multDistribute(Expression literal, Expression set) {
-      Expression tempLeftE = new MultExpression(literal, ((TwoSidedExpression)set).getLeftE()); //TODO: THIS WASN'T ORIGINALLY DISTRIBUTED, NEED MORE TESTING TO VALIDATE
-      Expression tempRightE = new MultExpression(literal, ((TwoSidedExpression)set).getRightE()); //maybe the previous line to-do makes this distribute irrelevant
+      Expression tempLeftE = new MultExpression(literal, ((TwoSidedExpression)set).getLeftE());
+      Expression tempRightE = new MultExpression(literal, ((TwoSidedExpression)set).getRightE());
 
       //we MUST call distributes on our left and right sides, this is the key to nested distribution
       return getExpressionChar(set.type, tempLeftE, tempRightE).distribute();
    }
-
-   @Override
-   public Expression getLeftE() { return leftE; }
-
-   @Override
-   public Expression getRightE() { return rightE; }
 
    public String toString() {
       String leftS;

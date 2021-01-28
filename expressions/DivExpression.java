@@ -1,14 +1,9 @@
 package expressions;
 
 public class DivExpression extends TwoSidedExpression {
-    private Expression leftE;
-    private Expression rightE;
 
     public DivExpression(Expression leftE, Expression rightE) {
-        super('/');
-
-        this.rightE = rightE;
-        this.leftE = leftE;
+        super('/', leftE, rightE);
     }
 
     /* Earlier version of this method were a good example of over.distribution. Because we abstract out the recursive
@@ -65,20 +60,14 @@ public class DivExpression extends TwoSidedExpression {
         return getExpressionChar(set.type, tempLeftE, tempRightE).distribute();
     }
 
-    @Override
-    public Expression getLeftE() { return leftE; }
-
-    @Override
-    public Expression getRightE() { return rightE; }
-
     //see pow version of this method for comments
     public String toString() {
         String leftS;
         String rightS;
 
-        if(leftE.type == 'L' || leftE instanceof ParenthExpression)  leftS =  leftE.toString();
+        if(leftE.type == 'L')  leftS =  leftE.toString();
         else leftS = "[" + leftE.toString() + "]";
-        if(rightE.type == 'L' || rightE instanceof ParenthExpression)  rightS =  rightE.toString();
+        if(rightE.type == 'L')  rightS =  rightE.toString();
         else rightS = "[" + rightE.toString() + "]";
 
         return leftS + "/" + rightS;

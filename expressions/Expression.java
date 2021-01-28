@@ -2,7 +2,7 @@ package expressions;
 
 import java.util.ArrayList;
 
-public class Expression {
+public abstract class Expression {
 
    public final char type;
 
@@ -16,8 +16,11 @@ public class Expression {
       this.type = type;
    }
 
-   //purely for overriding
-   public Expression distribute() { return null; }
+   public abstract Expression distribute();
+
+   public abstract String toString();
+
+   //public abstract double NumericallySolve();
 
    public static Expression parse(String in) {
       ArrayList<Integer> numList = new ArrayList<>(); //list of index for operators
@@ -151,9 +154,5 @@ public class Expression {
          if(pos == 0) return i;
       }
       return -1; //this should never run
-   }
-
-   public String toString() {
-      return "ERROR: THIS SHOULD ALWAYS BE OVERRIDEN";
    }
 }

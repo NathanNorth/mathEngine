@@ -28,8 +28,8 @@ public class Equation {
       brokenEq[2] = equationIn.substring(index + 1, equationIn.length());
       
       //creates expression objects
-      Expression leftEq = new Expression(brokenEq[0]);
-      Expression rightEq = new Expression(brokenEq[2]);
+      Expression leftEq = new Expression(brokenEq[0], true);
+      Expression rightEq = new Expression(brokenEq[2], true);
       
       //evaluates for a boolean
       switch(brokenEq[1]) {

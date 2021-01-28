@@ -5,20 +5,7 @@ public class SubtractExpression extends TwoSidedExpression {
     private Expression rightE;
 
     public SubtractExpression(Expression leftE, Expression rightE) {
-        super('-');
-
-        this.rightE = rightE;
-        this.leftE = leftE;
-    }
-
-    @Override
-    public Expression getLeftE() {
-        return leftE;
-    }
-
-    @Override
-    public Expression getRightE() {
-        return rightE;
+        super('-', leftE, rightE);
     }
 
     public Expression distribute() {

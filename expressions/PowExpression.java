@@ -23,6 +23,12 @@ public class PowExpression extends Expression {
                 ((ExpressionLiteral)power).isConstant &&
                 ((ExpressionLiteral)power).isInt;
 
+        //is base is powExpression we can multiply (doesnt work if pow is pow)
+        if(base.type == '^') {
+            Expression newPow = new MultExpression(((PowExpression)base).getPower(), power);
+            return new PowExpression(((PowExpression)base).getBase(), newPow).distribute();
+        }
+
         //if base is literal or pow
         if(precedenceI(base.distribute().type) > precedenceI('/')) {
             return new PowExpression(base, power);
@@ -67,16 +73,15 @@ public class PowExpression extends Expression {
         return power;
     }
 
-
     public String toString() {
         //string representations of values
         String baseS;
         String powerS;
 
         //these find out if we want brackets for increased clarity. Brackets are redundant if base/pow is a parenth already
-        if(base.type == 'L' || base instanceof  ParenthExpression)  baseS =  base.toString();
+        if(base.type == 'L')  baseS =  base.toString();
         else baseS = "[" + base.toString() + "]";
-        if(power.type == 'L' || power instanceof ParenthExpression)  powerS =  power.toString();
+        if(power.type == 'L')  powerS =  power.toString();
         else powerS = "[" + power.toString() + "]";
 
         return baseS + "^" + powerS;

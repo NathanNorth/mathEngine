@@ -16,10 +16,11 @@ public class StringTesting {
       //String test = "(12+1)^_2.0"; //todo: think about if it makes the most sense for this to just do negative exponent distribution
       //String test = "a/(b+c+d)";
       //String test = "1/(a*(3-2))";
-      //String test = "((a*b)^c)^d";
+      String test = "(a*b)^(c^d)";
+      //String test = "((a/b)^c)^e";
       //String test = "(a/b)^c^d";
       //String test = "1-(6+7)";
-      String test = "(a+b)*(c+d)";
+      //String test = "(a+b+l)*(c+d+y)";
 
       expressions.Expression pog = expressions.Expression.parse(test);
       System.out.println(pog);

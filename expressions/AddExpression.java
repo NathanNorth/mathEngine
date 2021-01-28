@@ -4,24 +4,8 @@ package expressions;
 
 public class AddExpression extends TwoSidedExpression {
 
-   private Expression leftE;
-   private Expression rightE;
-
    public AddExpression(Expression leftE, Expression rightE) {
-      super('+');
-
-      this.rightE = rightE;
-      this.leftE = leftE;
-   }
-
-   @Override
-   public Expression getRightE() {
-      return rightE;
-   }
-
-   @Override
-   public Expression getLeftE() {
-      return leftE;
+      super('+', leftE, rightE);
    }
 
    public Expression distribute() {
